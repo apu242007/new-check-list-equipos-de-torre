@@ -10,9 +10,9 @@ La instrucción posterior del usuario reemplaza las opciones de estado del docum
 - `NO OK`: no cumple y requiere acción correctiva.
 - `EN PROC`: la corrección está en curso.
 - `N/A`: no aplica al pozo o configuración actual.
-- Para `NO OK` y `EN PROC`, exigir responsable, plazo de resolución, acción correctiva propuesta, evidencia y una foto real obligatoria.
-- Permitir observación.
-- El cierre del hallazgo (estado final, fecha, evidencia de cierre, verificado por) se completa manualmente en SharePoint; la app no lo gestiona.
+- Para `NO OK` y `EN PROC`, exigir una foto real obligatoria.
+- Permitir una observación breve, opcional.
+- El seguimiento del hallazgo (responsable, plazo, acción correctiva) y su cierre (estado final, fecha, evidencia de cierre, verificado por) se completan manualmente en SharePoint; la app no los gestiona.
 
 ## Presentación
 

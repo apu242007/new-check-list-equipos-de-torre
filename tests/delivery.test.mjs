@@ -31,10 +31,6 @@ test('la foto se carga desde el almacenamiento real, no desde el nombre declarad
   const d = draft();
   d.answers[1] = {
     state: 'NO OK',
-    responsible: 'Supervisor',
-    deadline: '2026-09-09',
-    action: 'Corregir',
-    evidence: 'Foto',
     photo: { id: 'f', name: 'foto.jpg', mime: 'image/jpeg', size: 30 },
   };
   await assert.rejects(

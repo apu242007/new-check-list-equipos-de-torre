@@ -19,12 +19,7 @@ export async function buildPayload(draft, catalog, getPhoto) {
     answers.push({
       id: item.id,
       state: codes[a.state || ''],
-      ...Object.fromEntries(
-        ['responsible', 'deadline', 'action', 'evidence', 'observation'].map((k) => [
-          k,
-          a[k] || '',
-        ]),
-      ),
+      observation: a.observation || '',
       photo,
     });
   }

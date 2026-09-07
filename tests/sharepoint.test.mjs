@@ -80,12 +80,12 @@ test('una respuesta perdida se reconcilia por título antes de repetir POST', as
   assert.equal(rows.headers.length, 1);
   assert.equal(rows.items.length, 2);
 });
-test('rechaza hallazgos incompletos antes de escribir', async () => {
+test('rechaza hallazgos sin foto antes de escribir', async () => {
   const { api, draft, writes } = setup();
   draft.answers[1] = { state: 'NO OK' };
   await assert.rejects(
     saveInspection(api, config, draft, catalog, () => {}),
-    /Responsable/,
+    /Foto/,
   );
   assert.equal(writes.length, 0);
 });

@@ -19,10 +19,6 @@ const source = readFileSync(new URL('../docs/checklist-fuente.md', import.meta.u
 const catalog = parseCatalog(source);
 const corrected = {
   state: 'NO OK',
-  responsible: 'Supervisor',
-  deadline: '2026-09-09',
-  action: 'Reemplazar componente',
-  evidence: 'Documento E-12',
   photo: { id: 'f', name: 'foto.jpg', mime: 'image/jpeg', size: 200 },
 };
 
@@ -72,18 +68,16 @@ test('equipos y operadoras usan las opciones aprobadas', () => {
   });
   assert.ok(validateDraft(draft, catalog).some((error) => error.field === 'equipment'));
 });
-test('cada campo correctivo es obligatorio para ambos estados de hallazgo', () => {
+test('la foto es obligatoria para ambos estados de hallazgo', () => {
   for (const state of ['NO OK', 'EN PROC']) {
     assert.deepEqual(validateItem({ ...corrected, state }), []);
-    for (const key of ['responsible', 'deadline', 'action', 'evidence'])
-      assert.ok(validateItem({ ...corrected, state, [key]: '  ' }).length, key);
+    assert.ok(validateItem({ state }).length);
   }
   assert.deepEqual(validateItem({ state: 'OK' }), []);
   assert.deepEqual(validateItem({ state: 'N/A' }), []);
   assert.ok(validateItem({ state: 'Cumple' }).length);
-  assert.ok(validateItem({ ...corrected, deadline: '2026-02-30' }).length);
 });
-test('mapeo coincide con las columnas reales y conserva evidencia', () => {
+test('mapeo coincide con las columnas reales y conserva la observación', () => {
   const item = catalog[0].items[0];
   const answer = { ...corrected, observation: 'Fisura <script>' };
   for (const [state, remote] of [
@@ -101,7 +95,6 @@ test('mapeo coincide con las columnas reales y conserva evidencia', () => {
     ).value.map((c) => c.name);
     for (const key of Object.keys(fields))
       assert.ok(allowed.includes(key) || key === 'RecorridaLookupId', key);
-    assert.equal(fromItemFields(fields).evidence, answer.evidence);
     assert.equal(fromItemFields(fields).observation, answer.observation);
     assert.equal(fromItemFields(fields).state, state);
   }
@@ -165,10 +158,7 @@ test('rechaza fechas, opciones y tamaños incompatibles con las listas', () => {
     operator: 'Inventada',
   });
   assert.ok(validateDraft(draft, catalog).length >= 4);
-  assert.ok(
-    validateItem({ state: 'OK', responsible: 'x'.repeat(256), action: 'x'.repeat(6001) }).length >=
-      2,
-  );
+  assert.ok(validateItem({ state: 'OK', observation: 'x'.repeat(6001) }).length);
   assert.throws(() => parseCatalog('# 1. Incompleta'));
 });
 test('observación heredada o bloque inválido se conserva y un estado desconocido se rechaza', () => {
@@ -186,8 +176,8 @@ test('importación no admite estados falsos ni campos con tipos ejecutables', ()
   const id = catalog[0].items[0].id;
   for (const value of [
     { state: 'Cumple' },
-    { evidence: { html: 'texto' } },
-    { action: 'x'.repeat(6001) },
+    { observation: { html: 'texto' } },
+    { observation: 'x'.repeat(6001) },
   ]) {
     draft.answers[id] = value;
     assert.throws(() => importDraft(JSON.stringify(draft), catalog, 'copy'));

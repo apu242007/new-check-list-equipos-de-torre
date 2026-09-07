@@ -64,10 +64,6 @@ const photoSchema = object({
 const answerSchema = object({
   id: { type: 'integer', minimum: 1, maximum: catalog.length },
   state: { enum: ['OK', 'NO_OK', 'EN_PROC', 'NA', 'SIN_REVISAR'] },
-  responsible: str(),
-  deadline: str(10),
-  action: str(6000),
-  evidence: str(6000),
   observation: str(6000),
   photo: { anyOf: [{ type: 'null' }, photoSchema] },
 });
@@ -148,9 +144,6 @@ const rowParams = {
   'item/Zona': `@${canonical}?['section']`,
   'item/ItemTexto': `@${canonical}?['text']`,
   'item/Estado/Value': `@${i}?['state']`,
-  'item/Responsable': `@${i}?['responsible']`,
-  'item/Plazo': date(`${i}?['deadline']`),
-  'item/AccionCorrectiva': `@${i}?['action']`,
   'item/Observaciones': "@string(outputs('Item_evidence'))",
   'item/Equipo': `@${g}?['equipment']`,
   'item/FotosCount': 0,
@@ -163,7 +156,6 @@ const saveItems = {
   actions: {
     Item_evidence: action('Compose', {
       observation: `@${i}?['observation']`,
-      evidence: `@${i}?['evidence']`,
       photoId: `@${i}?['photo']?['id']`,
     }),
     Create_detail: sp('PostItem', rowParams, 'Item_evidence'),
@@ -237,7 +229,7 @@ const processingActions = {
 };
 // The response acknowledges acceptance, while subsequent actions persist and notify.
 processingActions.Save_items.runAfter = {};
-const invalid = `@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),or(empty(trim(item()?['responsible'])),empty(item()?['deadline']),empty(trim(item()?['action'])),empty(trim(item()?['evidence'])),empty(item()?['photo']))),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(${onlyHex("item()?['photo']?['id']")})))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(${p}?['closed'],equals(item()?['state'],'SIN_REVISAR')))`;
+const invalid = `@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),empty(item()?['photo'])),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(${onlyHex("item()?['photo']?['id']")})))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(${p}?['closed'],equals(item()?['state'],'SIN_REVISAR')))`;
 const validActions = {
   Metadata_processing: initialMeta,
   Create_header: sp('PostItem', headerParams, 'Metadata_processing'),

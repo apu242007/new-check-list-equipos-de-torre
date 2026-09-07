@@ -21,7 +21,7 @@ Esquema real inspeccionado el 2026-09-07 y operación real de escritura verifica
 | EN PROC       | `EN_PROC`           |
 | N/A           | `NA`                |
 
-`EstadoFinal` (`PENDIENTE`/`CERRADO`) y `FechaVerif` se completan manualmente en SharePoint; la app no los escribe.
+`EstadoFinal` (`PENDIENTE`/`CERRADO`), `FechaVerif`, `Responsable`, `Plazo` y `AccionCorrectiva` se completan manualmente en SharePoint; la app no los escribe.
 
 ## Cabecera
 
@@ -39,14 +39,12 @@ No se escriben `TotalItems`, `ItemsOK`, `ItemsNoOK`, `ItemsEnProc`, `ItemsNA`, `
 | Número del catálogo       | `ItemId`                                   |
 | Sección y texto canónicos | `Zona`, `ItemTexto`                        |
 | Estado                    | `Estado`                                   |
-| Responsable y plazo       | `Responsable`, `Plazo`                     |
-| Acción correctiva         | `AccionCorrectiva`                         |
-| Evidencias textuales      | `Observaciones` como JSON                  |
+| Observación               | `Observaciones` como JSON                  |
 | Equipo                    | `Equipo`                                   |
 | Relación                  | `RecorridaLookupId`                        |
 | Foto                      | Adjunto JPEG y `FotosCount = 1`            |
 
-El servidor toma sección y texto de su catálogo de 248 puntos; no confía en texto enviado por el navegador. Cada `NO_OK` o `EN_PROC` requiere una foto JPEG válida además de responsable, plazo, acción y evidencia.
+El servidor toma sección y texto de su catálogo de 248 puntos; no confía en texto enviado por el navegador. Cada `NO_OK` o `EN_PROC` requiere una foto JPEG válida. Responsable, plazo y acción correctiva se completan manualmente en SharePoint.
 
 ## Confirmación e idempotencia
 

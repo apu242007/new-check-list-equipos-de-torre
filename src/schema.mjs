@@ -21,9 +21,6 @@ const itemTypes = {
   Zona: 'text',
   ItemTexto: 'text',
   Estado: 'choice',
-  Responsable: 'text',
-  Plazo: 'dateTime',
-  AccionCorrectiva: 'text',
   Observaciones: 'text',
   Equipo: 'text',
   Recorrida: 'lookup',
@@ -64,7 +61,6 @@ export function checkColumns(headers, items, config) {
     [headers, 'Notas'],
     [items, 'Observaciones'],
     [items, 'ItemTexto'],
-    [items, 'AccionCorrectiva'],
   ])
     if (!columns.find((c) => c.name === name).text.allowMultipleLines)
       throw Error(`La columna ${name} debe permitir varias líneas.`);

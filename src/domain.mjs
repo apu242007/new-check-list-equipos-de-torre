@@ -97,19 +97,7 @@ export function validateItem(answer = {}) {
       answer.photo.size > 1000000)
   )
     errors.push('Foto: obligatoria para NO OK o EN PROC.');
-  if (isFinding(answer))
-    for (const [key, label] of Object.entries({
-      responsible: 'Responsable',
-      deadline: 'Plazo de resolución',
-      action: 'Acción correctiva propuesta',
-      evidence: 'Evidencia',
-    }))
-      if (!text(answer[key])) errors.push(`${label}: obligatorio para NO OK o EN PROC.`);
-  if (text(answer.deadline) && !validDate(answer.deadline))
-    errors.push('Plazo de resolución: fecha no válida.');
-  if ((answer.responsible || '').length > 255) errors.push('responsible: máximo 255 caracteres.');
-  for (const key of ['observation', 'action', 'evidence'])
-    if ((answer[key] || '').length > 6000) errors.push(`${key}: máximo 6000 caracteres.`);
+  if ((answer.observation || '').length > 6000) errors.push('observation: máximo 6000 caracteres.');
   return errors;
 }
 export function validateDraft(draft, catalog) {
@@ -180,16 +168,8 @@ export function toItemFields(item, answer, parentId, equipment, draftId) {
     Zona: item.section,
     ItemTexto: item.text,
     Estado: remoteStates[answer.state || ''],
-    Responsable: answer.responsible || '',
-    Plazo: dateValue(answer.deadline),
-    AccionCorrectiva: answer.action || '',
     Observaciones:
-      (answer.observation || '') +
-      marker +
-      JSON.stringify({
-        evidence: answer.evidence || '',
-        catalogVersion: CATALOG_VERSION,
-      }),
+      (answer.observation || '') + marker + JSON.stringify({ catalogVersion: CATALOG_VERSION }),
     Equipo: equipment,
     RecorridaLookupId: String(parentId),
   };
@@ -197,11 +177,10 @@ export function toItemFields(item, answer, parentId, equipment, draftId) {
 export function fromItemFields(fields) {
   const raw = fields.Observaciones || '';
   const split = raw.lastIndexOf(marker);
-  let extra = {};
   let observation = raw;
   if (split >= 0) {
     try {
-      extra = JSON.parse(raw.slice(split + marker.length));
+      JSON.parse(raw.slice(split + marker.length));
       observation = raw.slice(0, split);
     } catch {
       /* Preserve malformed or legacy observations verbatim. */
@@ -210,14 +189,7 @@ export function fromItemFields(fields) {
   const state = Object.entries(remoteStates).find(([, remote]) => remote === fields.Estado)?.[0];
   if (state === undefined && fields.Estado)
     throw Error('El estado de SharePoint no es compatible con esta app.');
-  return {
-    state: state || '',
-    responsible: fields.Responsable || '',
-    deadline: (fields.Plazo || '').slice(0, 10),
-    action: fields.AccionCorrectiva || '',
-    observation,
-    evidence: extra.evidence || '',
-  };
+  return { state: state || '', observation };
 }
 export function importDraft(raw, catalog, id) {
   if (raw.length > 4_000_000) throw Error('El archivo supera el tamaño permitido.');
@@ -241,7 +213,7 @@ export function importDraft(raw, catalog, id) {
     draft.general[key] = source.general[key];
   }
   const allowed = new Set(catalog.flatMap((s) => s.items.map((i) => String(i.id))));
-  const answerKeys = ['state', 'responsible', 'deadline', 'action', 'evidence', 'observation'];
+  const answerKeys = ['state', 'observation'];
   for (const [key, value] of Object.entries(source.answers)) {
     if (!allowed.has(key) || !object(value)) throw Error('Ítem desconocido o inválido.');
     const answer = {};

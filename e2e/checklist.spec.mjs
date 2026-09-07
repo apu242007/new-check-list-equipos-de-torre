@@ -43,28 +43,11 @@ test('equipos y operadoras se eligen desde listas controladas', async ({ page })
   await expect(equipment).toHaveValue('TKR-11');
   await expect(operator).toHaveValue('Pampa Energía');
 });
-test('NO OK muestra y exige todos los campos correctivos; borrar selección no borra evidencia', async ({
-  page,
-}) => {
+test('NO OK exige foto; borrar selección no borra la observación', async ({ page }) => {
   await general(page);
   await first(page).getByRole('radio', { name: 'NO OK', exact: true }).check();
-  for (const label of [
-    'Responsable',
-    'Plazo de resolución',
-    'Acción correctiva propuesta',
-    'Evidencia / referencia documental',
-  ])
-    await expect(first(page).getByLabel(label, { exact: true })).toHaveAttribute('required', '');
-  await page.getByRole('button', { name: 'Validar registro', exact: true }).click();
-  await expect(page.locator('#errors')).toContainText('Responsable: obligatorio');
-  await first(page).getByLabel('Responsable', { exact: true }).fill('Supervisor');
-  await first(page).getByLabel('Plazo de resolución', { exact: true }).fill('2026-09-09');
-  await first(page)
-    .getByLabel('Acción correctiva propuesta', { exact: true })
-    .fill('Reemplazar componente');
-  await first(page)
-    .getByLabel('Evidencia / referencia documental', { exact: true })
-    .fill('Acta de inspección 12');
+  await expect(first(page).locator('.photo-input')).toHaveAttribute('required', '');
+  await first(page).getByLabel('Observación', { exact: true }).fill('Fisura visible en la base.');
   await page.getByRole('button', { name: 'Validar registro', exact: true }).click();
   await expect(page.locator('#errors')).toContainText('Foto: obligatoria');
   const photo = await page.evaluate(() => {
@@ -87,16 +70,18 @@ test('NO OK muestra y exige todos los campos correctivos; borrar selección no b
   await page.getByRole('button', { name: 'Validar registro', exact: true }).click();
   await expect(page.locator('#errors')).toBeHidden();
   await first(page).getByRole('button', { name: 'Quitar selección' }).click();
-  await expect(
-    first(page).getByLabel('Evidencia / referencia documental', { exact: true }),
-  ).toHaveValue('Acta de inspección 12');
+  await expect(first(page).getByLabel('Observación', { exact: true })).toHaveValue(
+    'Fisura visible en la base.',
+  );
 });
 test('el borrador sobrevive una recarga', async ({ page }) => {
   await first(page).getByRole('radio', { name: 'EN PROC', exact: true }).check();
-  await first(page).getByLabel('Responsable', { exact: true }).fill('Supervisor');
+  await first(page).getByLabel('Observación', { exact: true }).fill('Pendiente de revisión.');
   await page.reload();
   await expect(first(page).getByRole('radio', { name: 'EN PROC', exact: true })).toBeChecked();
-  await expect(first(page).getByLabel('Responsable', { exact: true })).toHaveValue('Supervisor');
+  await expect(first(page).locator('[data-answer="observation"]')).toHaveValue(
+    'Pendiente de revisión.',
+  );
 });
 test('búsqueda tolera acentos y navegación revela la sección oculta', async ({ page }) => {
   await page.getByLabel('Buscar ítem').fill('mastil');
