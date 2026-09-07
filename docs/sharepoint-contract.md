@@ -1,8 +1,8 @@
 # Contrato de SharePoint
 
-Inspección real realizada el 2026-09-07. Todas las operaciones contra el sitio fueron de lectura. No corresponde un manifiesto de aprovisionamiento de listas porque se reutilizan los recursos existentes sin modificar su esquema.
+Esquema real inspeccionado el 2026-09-07 y operación real de escritura verificada con un registro técnico identificado como prueba. Se reutilizan las listas existentes sin cambiar columnas ni opciones.
 
-## Destinos verificados
+## Destinos
 
 | Recurso | Identificador |
 | --- | --- |
@@ -13,7 +13,7 @@ Inspección real realizada el 2026-09-07. Todas las operaciones contra el sitio 
 
 ## Estados
 
-| Visible en la app | Valor en `Estado` de SharePoint |
+| Visible | SharePoint `Estado` |
 | --- | --- |
 | Sin selección | `SIN_REVISAR` |
 | OK | `OK` |
@@ -21,43 +21,36 @@ Inspección real realizada el 2026-09-07. Todas las operaciones contra el sitio 
 | EN PROC | `EN_PROC` |
 | N/A | `NA` |
 
-`EstadoFinal` es una columna distinta, con `PENDIENTE` y `CERRADO`. El cierre de un hallazgo no transforma su estado original en OK. La app requiere selección explícita de CERRADO para registrar el cierre; el valor pendiente es el mapeo de un cierre todavía no definido.
-
-## Campos del ítem
-
-| Dato | Columna interna |
-| --- | --- |
-| Clave de aplicación | `Title`: `PRE-{UUID-inspeccion}-{numero-item}` |
-| Número estable en el catálogo | `ItemId` (número) |
-| Sección | `Zona` |
-| Condición completa a verificar | `ItemTexto` (multilínea) |
-| Estado | `Estado` |
-| Responsable | `Responsable` (texto, no campo de persona) |
-| Fecha compromiso | `Plazo` (fecha) |
-| Acción correctiva | `AccionCorrectiva` |
-| Estado final | `EstadoFinal` |
-| Fecha de cierre del ítem | `FechaVerif` |
-| Observación y evidencia | `Observaciones` |
-| Equipo | `Equipo` |
-| Relación a la inspección | `RecorridaLookupId` |
-
-`Observaciones` conserva primero la observación libre y luego un bloque `[PREAUDITORIA-GENERICA-V1]` con JSON que contiene `evidence`, `closureEvidence`, `verifiedBy` y la versión de catálogo. Esta decisión permite conservar campos separados en la app usando la columna multilínea existente. La evidencia admite descripción verificable, referencia o enlace; **no se suben adjuntos binarios ni se inventa `FotosCount`**. Las herramientas que editan esa columna deben conservar el bloque para que el formulario pueda reconstruir los campos.
+`EstadoFinal` usa `PENDIENTE` y `CERRADO`. Cerrar un hallazgo no cambia su estado original.
 
 ## Cabecera
 
-`Equipo`, `Operadora`, `Contrato`, `FechaRelevamiento`, `Pozo`, `AuditoriaProgramada`, `EquipoRecorrida`, `CompanyRepresentative`, `Notas`, `Cerrada`, `FechaCierre` y `AppVersion` se escriben por nombre interno. Las opciones de operadora son YPF, TotalEnergies, Vista, PAE y Otra. Locación, empresa y supervisor se conservan en un bloque identificado dentro de `Notas`. Los campos `FirmaSupervisor` y `FirmaCR` no se usan como sustituto de una firma real.
+Se escriben `Title`, `Equipo`, `Operadora`, `Contrato`, `FechaRelevamiento`, `Pozo`, `AuditoriaProgramada`, `EquipoRecorrida`, `CompanyRepresentative`, `Notas`, `Cerrada`, `FechaCierre` y `AppVersion`. Locación, empresa, supervisor, estado de procesamiento y clave privada del comprobante se conservan como JSON en `Notas`.
 
-No se escriben `TotalItems`, `ItemsOK`, `ItemsNoOK`, `ItemsEnProc`, `ItemsNA`, `ItemsSinRevisar`, `PctAvance`, `Semaforo`, ni campos de reiteración. Permanecen fuera del comportamiento del checklist genérico.
+No se escriben `TotalItems`, `ItemsOK`, `ItemsNoOK`, `ItemsEnProc`, `ItemsNA`, `ItemsSinRevisar`, `PctAvance`, `Semaforo` ni campos de reiteración.
 
-## Persistencia y límites
+## Ítems y fotos
 
-- Un registro principal por UUID, con un registro de detalle por ítem respondido/editado. Los ítems todavía no tocados se mantienen sin selección en el catálogo local.
-- Cada guardado conserva puntos de recuperación en el borrador local. Antes de repetir una creación se consulta su título determinista. Se detectan títulos duplicados y no se sobrescriben automáticamente.
-- Los cambios usan `If-Match` con la versión recuperada. Ante un conflicto se detiene el envío y se conserva el borrador para exportar/reconciliar.
-- Una cabecera solo se marca cerrada después de confirmar todos los ítems. Microsoft Graph no ofrece una transacción entre ambas listas: ante un fallo puede quedar una inspección abierta y parcialmente guardada, recuperable al reintentar.
-- No existe restricción única sobre `Title` ni índice sobre `Recorrida` en el esquema inspeccionado. La app detecta duplicados, pero no puede garantizar exclusión distribuida entre computadoras sin cambios de esquema/backend. No se presenta el guardado como una transacción atómica.
-- Las búsquedas usan `HonorNonIndexedQueriesWarningMayFailRandomly`, porque las columnas de relación/título no están indexadas. Funcionaron en las consultas de inspección; para listas grandes puede requerirse un plan separado de índices, con aprobación previa.
-- Las inspecciones antiguas de otro catálogo no se cargan como si fueran de esta revisión. Abrir muestra exclusivamente registros identificados con el catálogo genérico actual.
-- El esquema completo está en `sharepoint-columns.json` y `sharepoint-item-columns.json`. No contienen registros de inspección ni credenciales.
+| Dato | Columna interna |
+| --- | --- |
+| Identificador | `Title`: `PRE2-{UUID-envío}-{número-item}` |
+| Número del catálogo | `ItemId` |
+| Sección y texto canónicos | `Zona`, `ItemTexto` |
+| Estado | `Estado` |
+| Responsable y plazo | `Responsable`, `Plazo` |
+| Acción correctiva | `AccionCorrectiva` |
+| Estado y fecha final | `EstadoFinal`, `FechaVerif` |
+| Evidencias textuales | `Observaciones` como JSON |
+| Equipo | `Equipo` |
+| Relación | `RecorridaLookupId` |
+| Foto | Adjunto JPEG y `FotosCount = 1` |
 
-Referencias: [crear ítem](https://learn.microsoft.com/en-us/graph/api/listitem-create?view=graph-rest-1.0), [actualizar campos y ETag](https://learn.microsoft.com/en-us/graph/api/listitem-update?view=graph-rest-1.0).
+El servidor toma sección y texto de su catálogo de 248 puntos; no confía en texto enviado por el navegador. Cada `NO_OK` o `EN_PROC` requiere una foto JPEG válida además de responsable, plazo, acción y evidencia.
+
+## Confirmación e idempotencia
+
+El receptor crea una copia inmutable por envío. Un UUID y una clave aleatoria almacenados en el navegador permiten consultar únicamente `processing`, `complete` o `failed`. La app presenta éxito solo cuando SharePoint terminó y Outlook informó `sent`. Repetir el mismo comprobante devuelve el registro existente y no vuelve a crearlo.
+
+Una modificación posterior genera otra copia, preservando la anterior. El título no tiene restricción única en SharePoint; el flujo detecta colisiones existentes, aunque dos solicitudes simultáneas desde navegadores distintos no constituyen una transacción distribuida. Los errores quedan visibles y el comprobante se conserva localmente.
+
+Los snapshots completos de columnas están en `sharepoint-columns.json` y `sharepoint-item-columns.json`; no contienen inspecciones ni credenciales.

@@ -22,6 +22,8 @@ jobs:
       - run: npm audit --audit-level=high
       - run: npm run test:coverage
       - run: npm run build
+        env:
+          TACKER_FLOW_URL: ${{ secrets.TACKER_FLOW_URL }}
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-pages-artifact@v4

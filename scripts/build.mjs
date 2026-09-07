@@ -6,8 +6,11 @@ await cp('public', 'dist', { recursive: true });
 const catalog = parseCatalog(await readFile('docs/checklist-fuente.md', 'utf8'));
 await writeFile('dist/catalog.json', JSON.stringify(catalog));
 await writeFile('dist/.nojekyll', '');
+const config = JSON.parse(await readFile('public/config.json', 'utf8'));
+config.submissionUrl = process.env.TACKER_FLOW_URL || '';
+await writeFile('dist/config.json', JSON.stringify(config));
 await build({
-  entryPoints: { app: 'src/app.mjs', redirect: 'src/redirect.mjs' },
+  entryPoints: { app: 'src/app.mjs' },
   outdir: 'dist',
   bundle: true,
   format: 'esm',

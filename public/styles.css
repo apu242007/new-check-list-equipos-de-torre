@@ -945,3 +945,50 @@ dialog p {
     display: block;
   }
 }
+
+.public-access {
+  color: #fff;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+.photo-field {
+  display: grid;
+  gap: 10px;
+}
+.photo-preview img {
+  width: 100%;
+  max-width: 360px;
+  max-height: 260px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #ccd3d8;
+}
+.remove-photo {
+  justify-self: start;
+  padding: 8px 14px;
+  border: 1px solid #b6bdc4;
+  background: white;
+  color: #932921;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.remove-photo[hidden] {
+  display: none;
+}
+@media (max-width: 600px) {
+  .public-access {
+    max-width: 125px;
+    text-align: right;
+    font-size: 0.7rem;
+  }
+}
+@media print {
+  .photo-input,
+  .remove-photo {
+    display: none;
+  }
+  .photo-preview img {
+    max-width: 220px;
+    max-height: 160px;
+  }
+}

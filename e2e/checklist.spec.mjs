@@ -10,6 +10,12 @@ async function general(page) {
     .fill('Inspector de prueba');
 }
 test.beforeEach(async ({ page }) => {
+  await page.route('**/config.json', async (route) => {
+    const response = await route.fetch();
+    const config = await response.json();
+    config.submissionUrl = '';
+    await route.fulfill({ json: config });
+  });
   await page.goto('/');
   await expect(page.locator('.check-section')).toHaveCount(16);
 });
@@ -47,6 +53,25 @@ test('NO OK muestra y exige todos los campos correctivos; borrar selección no b
     .getByLabel('Evidencia / referencia documental', { exact: true })
     .fill('Acta de inspección 12');
   await page.getByRole('button', { name: 'Validar registro', exact: true }).click();
+  await expect(page.locator('#errors')).toContainText('Foto: obligatoria');
+  const photo = await page.evaluate(() => {
+    const c = document.createElement('canvas');
+    c.width = 40;
+    c.height = 40;
+    const x = c.getContext('2d');
+    x.fillStyle = '#ab2345';
+    x.fillRect(0, 0, 40, 40);
+    return c.toDataURL('image/png').split(',')[1];
+  });
+  await first(page)
+    .locator('.photo-input')
+    .setInputFiles({
+      name: 'evidencia.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(photo, 'base64'),
+    });
+  await expect(first(page).locator('.photo-preview img')).toBeVisible();
+  await page.getByRole('button', { name: 'Validar registro', exact: true }).click();
   await expect(page.locator('#errors')).toBeHidden();
   await first(page).getByRole('button', { name: 'Quitar selección' }).click();
   await expect(
@@ -76,7 +101,7 @@ test('búsqueda tolera acentos y navegación revela la sección oculta', async (
 test('conexión no configurada se explica y no se simula un envío', async ({ page }) => {
   await general(page);
   await page.getByRole('button', { name: 'Guardar en SharePoint', exact: false }).click();
-  await expect(page.locator('#notice')).toContainText('aún no fue configurada');
+  await expect(page.locator('#notice')).toContainText('todavía no está configurado');
   await expect(page.locator('#document-state')).not.toContainText('guardada en SharePoint');
 });
 test('exportación e importación crean una copia independiente y escapan contenido', async ({

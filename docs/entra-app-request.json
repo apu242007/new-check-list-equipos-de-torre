@@ -1,6 +1,0 @@
-{
-  "displayName": "Tacker - Preauditoria generica equipos de torre",
-  "signInAudience": "AzureADMyOrg",
-  "spa": {"redirectUris": ["http://localhost:4173/redirect.html", "https://apu242007.github.io/new-check-list-equipos-de-torre/redirect.html"]},
-  "requiredResourceAccess": [{"resourceAppId": "00000003-0000-0000-c000-000000000000", "resourceAccess": [{"id": "f89c84ef-20d0-4b54-87e9-02e856d66d53", "type": "Scope"}]}]
-}

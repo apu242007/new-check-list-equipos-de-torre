@@ -1,0 +1,2171 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "2.0.0.0",
+  "parameters": {
+    "$connections": {
+      "type": "Object",
+      "defaultValue": {}
+    },
+    "$authentication": {
+      "type": "SecureObject",
+      "defaultValue": {}
+    },
+    "catalog": {
+      "type": "Array",
+      "defaultValue": [
+        {
+          "id": 1,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar integridad estructural de los escalones de la escalera de acceso al primer tramo del mástil."
+        },
+        {
+          "id": 2,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar ausencia de deformaciones, fisuras, corrosión, roturas o reparaciones defectuosas en escalones."
+        },
+        {
+          "id": 3,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que las reparaciones realizadas sobre escalones o estructuras no permitan ingreso o acumulación de humedad."
+        },
+        {
+          "id": 4,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que el acceso al sistema de regulación de riendas disponga de protección perimetral conforme al requisito aplicable."
+        },
+        {
+          "id": 5,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que los escalones y superficies de acceso posean dimensiones y profundidad adecuadas para tránsito seguro."
+        },
+        {
+          "id": 6,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que la escalera de acceso a la válvula de seguridad de la bomba de ahogue esté completa."
+        },
+        {
+          "id": 7,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar presencia e integridad del escalón inferior de acceso a la válvula de seguridad de la bomba de ahogue."
+        },
+        {
+          "id": 8,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar integridad y aseguramiento del grillete superior de la línea de vida de la escalera de acceso al Trip Tank."
+        },
+        {
+          "id": 9,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que los grilletes posean dispositivo de aseguramiento contra apertura involuntaria."
+        },
+        {
+          "id": 10,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar instalación de eslingas o dispositivos secundarios de seguridad cuando correspondan."
+        },
+        {
+          "id": 11,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que mangueras hidráulicas, cables u otros elementos no obstruyan escaleras, pasarelas ni vías de acceso."
+        },
+        {
+          "id": 12,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar que las vías de circulación estén libres de riesgos de tropiezo."
+        },
+        {
+          "id": 13,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar integridad del escalón inferior de la escalera posterior del segundo tramo del mástil."
+        },
+        {
+          "id": 14,
+          "section": "ACCESOS Y ESCALERAS",
+          "text": "Verificar integridad del sector de vinculación inferior de la línea de vida."
+        },
+        {
+          "id": 15,
+          "section": "ACUMULADOR HIDRÁULICO",
+          "text": "Verificar ausencia de pérdidas de aceite hidráulico en conexiones, accesorios y mangueras del acumulador."
+        },
+        {
+          "id": 16,
+          "section": "ACUMULADOR HIDRÁULICO",
+          "text": "Verificar estado de conexiones hidráulicas próximas al carretel de arrollamiento."
+        },
+        {
+          "id": 17,
+          "section": "ACUMULADOR HIDRÁULICO",
+          "text": "Verificar estado general de las mangueras hidráulicas."
+        },
+        {
+          "id": 18,
+          "section": "ACUMULADOR HIDRÁULICO",
+          "text": "Verificar correcta regulación del presostato de la bomba neumática del acumulador."
+        },
+        {
+          "id": 19,
+          "section": "ACUMULADOR HIDRÁULICO",
+          "text": "Verificar que el arranque y parada automática del sistema se produzcan conforme a la especificación técnica vigente."
+        },
+        {
+          "id": 20,
+          "section": "ACUMULADOR HIDRÁULICO",
+          "text": "Verificar disponibilidad de identificación o documentación de los parámetros operativos establecidos."
+        },
+        {
+          "id": 21,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar que bidones, recipientes y productos químicos estén almacenados en sectores autorizados."
+        },
+        {
+          "id": 22,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar que recipientes con combustible estén correctamente identificados."
+        },
+        {
+          "id": 23,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar que los recipientes se encuentren cerrados y en condiciones adecuadas."
+        },
+        {
+          "id": 24,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar disponibilidad de contención secundaria para combustibles y líquidos con potencial de derrame."
+        },
+        {
+          "id": 25,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar capacidad e integridad de bandejas o sistemas de contención."
+        },
+        {
+          "id": 26,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar incompatibilidades entre productos almacenados."
+        },
+        {
+          "id": 27,
+          "section": "ALMACENAMIENTO DE COMBUSTIBLES Y PRODUCTOS",
+          "text": "Verificar orden y condiciones del depósito de herramientas y materiales."
+        },
+        {
+          "id": 28,
+          "section": "BOP",
+          "text": "Verificar integridad de las mangueras hidráulicas del BOP."
+        },
+        {
+          "id": 29,
+          "section": "BOP",
+          "text": "Verificar integridad de las protecciones mecánicas de las mangueras."
+        },
+        {
+          "id": 30,
+          "section": "BOP",
+          "text": "Verificar ausencia de cortes, abrasión, aplastamientos, exposición de refuerzos o deterioro."
+        },
+        {
+          "id": 31,
+          "section": "BOP",
+          "text": "Verificar instalación y disponibilidad de los dispositivos para cierre manual del BOP."
+        },
+        {
+          "id": 32,
+          "section": "BOP",
+          "text": "Verificar accesibilidad a los dispositivos de cierre manual."
+        },
+        {
+          "id": 33,
+          "section": "BOP",
+          "text": "Verificar que las mangueras hidráulicas del BOP posean sistemas secundarios de retención o seguridad cuando correspondan."
+        },
+        {
+          "id": 34,
+          "section": "BOP",
+          "text": "Verificar integridad y correcta fijación de eslingas/dispositivos de seguridad de las mangueras."
+        },
+        {
+          "id": 35,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar funcionamiento correcto del acelerador de la bomba de ahogue."
+        },
+        {
+          "id": 36,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar retorno automático del acelerador a posición segura o cero según diseño."
+        },
+        {
+          "id": 37,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar que modificaciones realizadas al sistema estén documentadas, aprobadas y sean compatibles con requisitos aplicables."
+        },
+        {
+          "id": 38,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar estado de uniones dobles a golpe / hammer unions de líneas de alta presión."
+        },
+        {
+          "id": 39,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar ausencia de desgaste excesivo, deformaciones o daños en alas y superficies de golpe."
+        },
+        {
+          "id": 40,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar estado de uniones de la línea de venteo cuando corresponda."
+        },
+        {
+          "id": 41,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar correcta instalación de fajas o sistemas secundarios de seguridad en líneas de alta presión."
+        },
+        {
+          "id": 42,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar integridad de las fajas de seguridad."
+        },
+        {
+          "id": 43,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar identificación y trazabilidad de las fajas de seguridad cuando corresponda."
+        },
+        {
+          "id": 44,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar estado de manguerotes de líneas de alta presión."
+        },
+        {
+          "id": 45,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar estado de manguerotes del sistema Trip Tank."
+        },
+        {
+          "id": 46,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar ausencia de daños en cubiertas exteriores de mangueras y manguerotes."
+        },
+        {
+          "id": 47,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar que el manguerote vinculado al standpipe posea retención secundaria cuando corresponda."
+        },
+        {
+          "id": 48,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar integridad y correcta instalación de la eslinga de seguridad del manguerote del standpipe."
+        },
+        {
+          "id": 49,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar legibilidad del manómetro de la bomba de ahogue."
+        },
+        {
+          "id": 50,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar que escala, cartilla e indicaciones del manómetro sean claramente visibles desde el puesto de operación."
+        },
+        {
+          "id": 51,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar condición de empaquetaduras del pistón de la bomba."
+        },
+        {
+          "id": 52,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar estado de la superficie interna de las camisas."
+        },
+        {
+          "id": 53,
+          "section": "BOMBA DE AHOGUE / LÍNEAS DE ALTA PRESIÓN",
+          "text": "Verificar ausencia de desgaste o deterioro que pueda afectar la operación."
+        },
+        {
+          "id": 54,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar visualmente vigas y elementos estructurales del chasis."
+        },
+        {
+          "id": 55,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar ausencia de fisuras en cordones de soldadura."
+        },
+        {
+          "id": 56,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar ausencia de deformaciones, fisuras o daños estructurales."
+        },
+        {
+          "id": 57,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar especialmente zonas próximas a gatos y puntos de concentración de carga."
+        },
+        {
+          "id": 58,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar zonas delanteras y traseras del chasis."
+        },
+        {
+          "id": 59,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Identificar reparaciones o trabajos de soldadura realizados sobre elementos estructurales."
+        },
+        {
+          "id": 60,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar existencia de documentación técnica de las reparaciones estructurales."
+        },
+        {
+          "id": 61,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar existencia de inspecciones posteriores a trabajos de soldadura cuando correspondan."
+        },
+        {
+          "id": 62,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar que la condición estructural del equipo sea compatible con los requisitos para transporte y operación."
+        },
+        {
+          "id": 63,
+          "section": "CHASIS Y ESTRUCTURA PORTANTE",
+          "text": "Verificar trazabilidad de reparaciones estructurales relevantes."
+        },
+        {
+          "id": 64,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar vigencia del certificado de calibración/inspección del guinche hidráulico."
+        },
+        {
+          "id": 65,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar correspondencia entre identificación del equipo y certificado."
+        },
+        {
+          "id": 66,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar que la capacidad indicada en cartelería coincida con la capacidad técnicamente autorizada."
+        },
+        {
+          "id": 67,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar que no existan capacidades pintadas o identificadas diferentes a las aprobadas."
+        },
+        {
+          "id": 68,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar legibilidad de cartelería del Trip Tank."
+        },
+        {
+          "id": 69,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar legibilidad de señalización de seguridad."
+        },
+        {
+          "id": 70,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar correcta identificación de partes móviles."
+        },
+        {
+          "id": 71,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar correcta identificación de líneas eléctricas."
+        },
+        {
+          "id": 72,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar correcta identificación de líneas hidráulicas."
+        },
+        {
+          "id": 73,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar aplicación consistente del código de colores vigente."
+        },
+        {
+          "id": 74,
+          "section": "DOCUMENTACIÓN, CERTIFICACIONES E IDENTIFICACIÓN",
+          "text": "Verificar que señalización e identificación correspondan al procedimiento o estándar aplicable."
+        },
+        {
+          "id": 75,
+          "section": "ELEVADORES",
+          "text": "Verificar condición estructural de elevadores en servicio."
+        },
+        {
+          "id": 76,
+          "section": "ELEVADORES",
+          "text": "Verificar ajuste de bulones del elevador a cuñas."
+        },
+        {
+          "id": 77,
+          "section": "ELEVADORES",
+          "text": "Verificar que no existan bulones flojos, faltantes o deteriorados."
+        },
+        {
+          "id": 78,
+          "section": "ELEVADORES",
+          "text": "Verificar sistema de fijación de la lengüeta/tope de tubing."
+        },
+        {
+          "id": 79,
+          "section": "ELEVADORES",
+          "text": "Verificar presencia de mecanismos de retención o aseguramiento de los bulones."
+        },
+        {
+          "id": 80,
+          "section": "ELEVADORES",
+          "text": "Verificar pernos de asas de elevadores de varillas de bombeo."
+        },
+        {
+          "id": 81,
+          "section": "ELEVADORES",
+          "text": "Verificar presencia y funcionamiento de seguros en los pernos."
+        },
+        {
+          "id": 82,
+          "section": "ELEVADORES",
+          "text": "Verificar ausencia de modificaciones no autorizadas en elevadores."
+        },
+        {
+          "id": 83,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar funcionamiento de la iluminación de emergencia de la cabina del maquinista."
+        },
+        {
+          "id": 84,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar disponibilidad de iluminación de emergencia en comandos de pistoneo."
+        },
+        {
+          "id": 85,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar disponibilidad de iluminación de emergencia en comandos de la bomba de ahogue."
+        },
+        {
+          "id": 86,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar funcionamiento efectivo de todas las luminarias de emergencia."
+        },
+        {
+          "id": 87,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar fijación de plafones de iluminación instalados sobre el mástil."
+        },
+        {
+          "id": 88,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar integridad de vinculaciones y soportes de luminarias próximas a corona."
+        },
+        {
+          "id": 89,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar integridad de los protectores de plafones."
+        },
+        {
+          "id": 90,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar ausencia de deformaciones por impacto."
+        },
+        {
+          "id": 91,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar disposición de cables eléctricos y mangueras sobre el mástil."
+        },
+        {
+          "id": 92,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar que cables y mangueras no posean longitud libre excesiva."
+        },
+        {
+          "id": 93,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar correcta fijación y anclaje."
+        },
+        {
+          "id": 94,
+          "section": "ILUMINACIÓN Y SISTEMA ELÉCTRICO",
+          "text": "Verificar que cables y mangueras no generen riesgo de enganche, atrapamiento o contacto con elementos móviles."
+        },
+        {
+          "id": 95,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar ubicación del punto superior de anclaje de la línea de vida de acceso al mástil."
+        },
+        {
+          "id": 96,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar que la ubicación permita utilización adecuada del sistema."
+        },
+        {
+          "id": 97,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar existencia de sistema secundario de seguridad cuando corresponda."
+        },
+        {
+          "id": 98,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar documentación o evidencia técnica de capacidad/resistencia de puntos de anclaje."
+        },
+        {
+          "id": 99,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar estabilidad del acceso al mástil por la zona superior de la cabina."
+        },
+        {
+          "id": 100,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar disponibilidad de protección perimetral en sectores con riesgo de caída."
+        },
+        {
+          "id": 101,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar posición y altura adecuada de componentes del sistema anticaídas."
+        },
+        {
+          "id": 102,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar disponibilidad de línea de vida para acceder desde el segundo tramo del mástil hasta corona."
+        },
+        {
+          "id": 103,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar tensión adecuada de las líneas de vida."
+        },
+        {
+          "id": 104,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar cantidad y tipo de componentes conforme al fabricante y requisito aplicable."
+        },
+        {
+          "id": 105,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar instalación del soporte superior del dispositivo anticaídas en corona."
+        },
+        {
+          "id": 106,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar ausencia de interferencias entre soportes, cable de guinche, cable del aparejo y demás elementos."
+        },
+        {
+          "id": 107,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar que bulones y pernos utilizados en anclajes sean adecuados para el tipo de esfuerzo."
+        },
+        {
+          "id": 108,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar que las roscas no trabajen directamente en zonas de corte cuando ello no sea admisible."
+        },
+        {
+          "id": 109,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar disponibilidad de retenciones secundarias en dispositivos anticaídas y elementos suspendidos."
+        },
+        {
+          "id": 110,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar integridad del punto inferior de vinculación de las líneas de vida."
+        },
+        {
+          "id": 111,
+          "section": "LÍNEAS DE VIDA Y SISTEMAS DE ANCLAJE",
+          "text": "Verificar presencia y correcta instalación de grampas, terminales y accesorios."
+        },
+        {
+          "id": 112,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar correcto funcionamiento de la tapa protectora de la llave hidráulica."
+        },
+        {
+          "id": 113,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar funcionamiento del interbloqueo de seguridad."
+        },
+        {
+          "id": 114,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar que los comandos no puedan operar cuando la protección se encuentre abierta, salvo condición de diseño específicamente autorizada."
+        },
+        {
+          "id": 115,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar ausencia de bypass o anulación de sistemas de seguridad."
+        },
+        {
+          "id": 116,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar estado de mangueras hidráulicas de la llave de tubing."
+        },
+        {
+          "id": 117,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar integridad de cubiertas exteriores."
+        },
+        {
+          "id": 118,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar ausencia de pérdidas hidráulicas."
+        },
+        {
+          "id": 119,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar estado de mangueras neumáticas de la contra-llave."
+        },
+        {
+          "id": 120,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar ausencia de pérdidas neumáticas."
+        },
+        {
+          "id": 121,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar estado de mangueras de la cuña neumática."
+        },
+        {
+          "id": 122,
+          "section": "LLAVE HIDRÁULICA DE TUBING Y CUÑA NEUMÁTICA",
+          "text": "Verificar ausencia de cortes, abrasión, deterioro o conexiones defectuosas."
+        },
+        {
+          "id": 123,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de pérdidas de aceite en el pistón del segundo tramo."
+        },
+        {
+          "id": 124,
+          "section": "MÁSTIL",
+          "text": "Verificar estado de sellos, conexiones y componentes hidráulicos."
+        },
+        {
+          "id": 125,
+          "section": "MÁSTIL",
+          "text": "Verificar recorrido del cable de regulación del piso de enganche."
+        },
+        {
+          "id": 126,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de contacto o interferencia del cable con perfiles estructurales."
+        },
+        {
+          "id": 127,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de interferencia con plafones y otros accesorios."
+        },
+        {
+          "id": 128,
+          "section": "MÁSTIL",
+          "text": "Verificar sistemas anticaídas secundarios en todos los elementos instalados en altura."
+        },
+        {
+          "id": 129,
+          "section": "MÁSTIL",
+          "text": "Verificar protección y aseguramiento de conectores del pistón."
+        },
+        {
+          "id": 130,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento del pestillo/traba del segundo tramo."
+        },
+        {
+          "id": 131,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento de cámaras."
+        },
+        {
+          "id": 132,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento de mangueras de cabeza rotativa."
+        },
+        {
+          "id": 133,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento de dispositivos anticaídas."
+        },
+        {
+          "id": 134,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento de líneas de vida laterales y posteriores."
+        },
+        {
+          "id": 135,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento de puerta y elementos del sistema de escape."
+        },
+        {
+          "id": 136,
+          "section": "MÁSTIL",
+          "text": "Verificar estado de riendas de carga del primer tramo del mástil."
+        },
+        {
+          "id": 137,
+          "section": "MÁSTIL",
+          "text": "Verificar estado de riendas de carga del segundo tramo."
+        },
+        {
+          "id": 138,
+          "section": "MÁSTIL",
+          "text": "Verificar que terminales y vinculaciones sean adecuados y certificados cuando corresponda."
+        },
+        {
+          "id": 139,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de terminaciones improvisadas o configuraciones no autorizadas."
+        },
+        {
+          "id": 140,
+          "section": "MÁSTIL",
+          "text": "Verificar regulación de centralizadores del pistón del segundo tramo."
+        },
+        {
+          "id": 141,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de marcas, desgaste o daño sobre la superficie del pistón."
+        },
+        {
+          "id": 142,
+          "section": "MÁSTIL",
+          "text": "Verificar existencia y efectividad del material de sacrificio en zonas de contacto."
+        },
+        {
+          "id": 143,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de rozamiento directo de cables contra estructura metálica."
+        },
+        {
+          "id": 144,
+          "section": "MÁSTIL",
+          "text": "Verificar aseguramiento secundario del material de sacrificio cuando exista riesgo de caída."
+        },
+        {
+          "id": 145,
+          "section": "MÁSTIL",
+          "text": "Verificar adecuación de bulones, tuercas y sistemas de bloqueo utilizados en standpipe."
+        },
+        {
+          "id": 146,
+          "section": "MÁSTIL",
+          "text": "Verificar adecuación de bulones, abrazaderas y tuercas utilizados en cámaras instaladas en altura."
+        },
+        {
+          "id": 147,
+          "section": "MÁSTIL",
+          "text": "Verificar que los sistemas de fijación sean compatibles con vibraciones del equipo."
+        },
+        {
+          "id": 148,
+          "section": "MÁSTIL",
+          "text": "Verificar que cadenas utilizadas para vinculación de elementos posean capacidad y trazabilidad adecuadas."
+        },
+        {
+          "id": 149,
+          "section": "MÁSTIL",
+          "text": "Verificar que no se utilicen cadenas con eslabones soldados artesanalmente para funciones estructurales o de seguridad."
+        },
+        {
+          "id": 150,
+          "section": "MÁSTIL",
+          "text": "Verificar integridad de gomas o protecciones instaladas para evitar contacto metal-metal."
+        },
+        {
+          "id": 151,
+          "section": "MÁSTIL",
+          "text": "Verificar correcta fijación de dichas protecciones."
+        },
+        {
+          "id": 152,
+          "section": "MÁSTIL",
+          "text": "Verificar estado de la eslinga de seguridad del pistón del primer tramo."
+        },
+        {
+          "id": 153,
+          "section": "MÁSTIL",
+          "text": "Verificar condición de alambres/hilos conforme al criterio de descarte aplicable."
+        },
+        {
+          "id": 154,
+          "section": "MÁSTIL",
+          "text": "Verificar integridad y alineación de la pisadera rebatible ubicada entre tambor principal y pistón del primer tramo."
+        },
+        {
+          "id": 155,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de deformaciones."
+        },
+        {
+          "id": 156,
+          "section": "MÁSTIL",
+          "text": "Verificar protección mecánica de conectores hidráulicos del pistón."
+        },
+        {
+          "id": 157,
+          "section": "MÁSTIL",
+          "text": "Verificar que las protecciones estén vinculadas a una estructura fija adecuada y no transmitan cargas indebidas a conectores."
+        },
+        {
+          "id": 158,
+          "section": "MÁSTIL",
+          "text": "Verificar correcta instalación de arandelas y sistemas de bloqueo de bulones."
+        },
+        {
+          "id": 159,
+          "section": "MÁSTIL",
+          "text": "Verificar correcta instalación de sistemas tipo NORD-LOCK cuando se utilicen."
+        },
+        {
+          "id": 160,
+          "section": "MÁSTIL",
+          "text": "Verificar adecuación de tuercas y elementos de fijación frente a vibraciones."
+        },
+        {
+          "id": 161,
+          "section": "MÁSTIL",
+          "text": "Verificar existencia de sistema secundario de retención del amortiguador de corona."
+        },
+        {
+          "id": 162,
+          "section": "MÁSTIL",
+          "text": "Verificar configuración del punto muerto del cable de regulación del piso de enganche."
+        },
+        {
+          "id": 163,
+          "section": "MÁSTIL",
+          "text": "Verificar correcta posición del guardacabo."
+        },
+        {
+          "id": 164,
+          "section": "MÁSTIL",
+          "text": "Verificar cantidad, orientación y separación de grampas conforme al criterio técnico aplicable."
+        },
+        {
+          "id": 165,
+          "section": "MÁSTIL",
+          "text": "Verificar que grilletes instalados no presenten interferencia permanente con perfiles estructurales."
+        },
+        {
+          "id": 166,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de contacto metal-metal no previsto."
+        },
+        {
+          "id": 167,
+          "section": "MÁSTIL",
+          "text": "Verificar condición del gancho utilizado para desmontaje próximo al tope del mástil."
+        },
+        {
+          "id": 168,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de deformaciones."
+        },
+        {
+          "id": 169,
+          "section": "MÁSTIL",
+          "text": "Verificar integridad de cables de sensores instalados en mástil."
+        },
+        {
+          "id": 170,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de cables cortados o deteriorados."
+        },
+        {
+          "id": 171,
+          "section": "MÁSTIL",
+          "text": "Verificar recorrido del cable del guinche hidráulico."
+        },
+        {
+          "id": 172,
+          "section": "MÁSTIL",
+          "text": "Verificar ausencia de rozamiento con instalaciones eléctricas o mangueras."
+        },
+        {
+          "id": 173,
+          "section": "MÁSTIL",
+          "text": "Verificar correcta fijación de placas y componentes del punto muerto."
+        },
+        {
+          "id": 174,
+          "section": "MÁSTIL",
+          "text": "Verificar estado de alambres/hilos de cables y riendas de carga."
+        },
+        {
+          "id": 175,
+          "section": "MÁSTIL",
+          "text": "Verificar condición respecto del criterio de descarte aplicable."
+        },
+        {
+          "id": 176,
+          "section": "MÁSTIL",
+          "text": "Registrar y efectuar seguimiento cuando exista deterioro que aún no alcance el criterio de descarte."
+        },
+        {
+          "id": 177,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar correcto funcionamiento del sistema de espuma/espumígeno."
+        },
+        {
+          "id": 178,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar respuesta adecuada del sistema durante prueba funcional."
+        },
+        {
+          "id": 179,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar cobertura efectiva del sector protegido."
+        },
+        {
+          "id": 180,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar ausencia general de pérdidas de aceite en la parte inferior del equipo."
+        },
+        {
+          "id": 181,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Identificar origen de cualquier pérdida detectada."
+        },
+        {
+          "id": 182,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar estado de manguera hidráulica de retorno a tanque."
+        },
+        {
+          "id": 183,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar ausencia de pérdidas en conexiones y cuerpo de manguera."
+        },
+        {
+          "id": 184,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar que el carretel de reserva del cable de aparejo disponga de protección/cobertor adecuado."
+        },
+        {
+          "id": 185,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar estado de la manguera de los matafuegos móviles de gran capacidad."
+        },
+        {
+          "id": 186,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar ausencia de fisuras, cortes, envejecimiento o deterioro."
+        },
+        {
+          "id": 187,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar sistema de traba contra giro del carretel de reserva."
+        },
+        {
+          "id": 188,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar que matafuegos posean seguros contra accionamiento involuntario."
+        },
+        {
+          "id": 189,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar disponibilidad de devanador para cable de pistoneo cuando sea requisito contractual o de diseño."
+        },
+        {
+          "id": 190,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar condición del cable de aparejo en toda su longitud accesible."
+        },
+        {
+          "id": 191,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Verificar presencia de alambres/hilos cortados."
+        },
+        {
+          "id": 192,
+          "section": "SISTEMAS AUXILIARES Y CONDICIONES GENERALES",
+          "text": "Evaluar el cable conforme a criterio de inspección y descarte aplicable, incluso en sectores momentáneamente fuera del área activa."
+        },
+        {
+          "id": 193,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar estado del componente textil del sistema inercial CARANBLOCK o equivalente."
+        },
+        {
+          "id": 194,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar ausencia de cortes, desgaste, abrasión, contaminación o deterioro."
+        },
+        {
+          "id": 195,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar correcta instalación del sistema pirosalva."
+        },
+        {
+          "id": 196,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar regulación del cable del deslizador."
+        },
+        {
+          "id": 197,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar ausencia de interferencias con la apertura de la puerta de escape."
+        },
+        {
+          "id": 198,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar que puerta y gancho del sistema de escape permanezcan libres y operativos."
+        },
+        {
+          "id": 199,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar ausencia de trapos, sogas, elementos improvisados u objetos utilizados para bloquear componentes."
+        },
+        {
+          "id": 200,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar estado del material textil del gancho/deslizador del sistema superior."
+        },
+        {
+          "id": 201,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar que los componentes utilizados correspondan al fabricante o estén técnicamente aprobados."
+        },
+        {
+          "id": 202,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar ausencia de adaptaciones improvisadas."
+        },
+        {
+          "id": 203,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar adecuación de bulones y pernos utilizados como puntos de vinculación."
+        },
+        {
+          "id": 204,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar presencia de seguros contra aflojamiento o liberación involuntaria."
+        },
+        {
+          "id": 205,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar estado funcional de dispositivos inerciales anticaídas."
+        },
+        {
+          "id": 206,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar que dispositivos activados, bloqueados, impactados o sometidos a una caída sean retirados de servicio hasta evaluación competente."
+        },
+        {
+          "id": 207,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar registros de inspección de dispositivos que hayan sido activados."
+        },
+        {
+          "id": 208,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar configuración de puntos de anclaje utilizados por triángulo de pirosalva y sistema CARANBLOCK."
+        },
+        {
+          "id": 209,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar que la configuración del anclaje esté técnicamente autorizada para las cargas previstas."
+        },
+        {
+          "id": 210,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar existencia de retención secundaria cuando corresponda."
+        },
+        {
+          "id": 211,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar que la longitud del dispositivo inercial sea adecuada a la altura y distancia libre disponible."
+        },
+        {
+          "id": 212,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar riesgo de caída libre y distancia de detención."
+        },
+        {
+          "id": 213,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar compatibilidad del dispositivo con el punto de trabajo."
+        },
+        {
+          "id": 214,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar pernos del deslizador y puntos de conexión al arnés."
+        },
+        {
+          "id": 215,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar que roscas no queden sometidas directamente a esfuerzos de corte cuando el diseño no lo permita."
+        },
+        {
+          "id": 216,
+          "section": "PIROSALVA / SISTEMAS ANTICAÍDAS",
+          "text": "Verificar compatibilidad de componentes con instrucciones del fabricante."
+        },
+        {
+          "id": 217,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar orden y limpieza del piso de enganche."
+        },
+        {
+          "id": 218,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar ausencia de botellas, trapos, herramientas u objetos atados o almacenados de manera improvisada."
+        },
+        {
+          "id": 219,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar que no existan objetos con riesgo de caída desde altura."
+        },
+        {
+          "id": 220,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar condición de poleas guía del cable de regulación del piso de enganche."
+        },
+        {
+          "id": 221,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar desgaste de poleas."
+        },
+        {
+          "id": 222,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar integridad de garganta/canal de las poleas."
+        },
+        {
+          "id": 223,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar que el cable permanezca correctamente alojado sobre las poleas."
+        },
+        {
+          "id": 224,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar ausencia de descarrilamiento del cable."
+        },
+        {
+          "id": 225,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar estado de las riendas de seguridad del piso de enganche."
+        },
+        {
+          "id": 226,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar ausencia de deformaciones permanentes."
+        },
+        {
+          "id": 227,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar alineación de los peines del piso de enganche."
+        },
+        {
+          "id": 228,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar integridad y fijación de los peines."
+        },
+        {
+          "id": 229,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar cables de seguridad instalados en piso de enganche."
+        },
+        {
+          "id": 230,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar cantidad y disposición de grampas conforme a especificación."
+        },
+        {
+          "id": 231,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar correcta dirección de trabajo del cable de regulación."
+        },
+        {
+          "id": 232,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar ausencia de rozamiento permanente con soportes de poleas u otros elementos."
+        },
+        {
+          "id": 233,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar estado de eslingas de seguridad de pisaderas rebatibles."
+        },
+        {
+          "id": 234,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar condición de alambres/hilos conforme al criterio de descarte aplicable."
+        },
+        {
+          "id": 235,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar estructura del piso de enganche en zonas próximas al cable del guinche."
+        },
+        {
+          "id": 236,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar ausencia de desgaste o daño estructural producido por rozamiento."
+        },
+        {
+          "id": 237,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar que lentes de seguridad, EPP, herramientas u otros objetos no permanezcan enganchados o sujetos de manera improvisada a cadenas o estructuras."
+        },
+        {
+          "id": 238,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar correcta colocación de grampas del cable de seguridad de las pisaderas rebatibles."
+        },
+        {
+          "id": 239,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar alineación de la pisadera lateral del piso de trabajo en el sector de ingreso por escalera."
+        },
+        {
+          "id": 240,
+          "section": "PISO DE ENGANCHE",
+          "text": "Verificar correcta fijación y estabilidad de pisaderas."
+        },
+        {
+          "id": 241,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar funcionamiento del sistema de protección por inercia."
+        },
+        {
+          "id": 242,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Realizar la prueba funcional definida por el fabricante/procedimiento aplicable."
+        },
+        {
+          "id": 243,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar correcta actuación de la protección durante la prueba."
+        },
+        {
+          "id": 244,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar funcionamiento de la selectora de cambios."
+        },
+        {
+          "id": 245,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar que el sistema impida seleccionar relaciones de transmisión no permitidas por la condición operativa o sistema de seguridad."
+        },
+        {
+          "id": 246,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar ausencia de anulaciones, bypass o modificaciones no autorizadas."
+        },
+        {
+          "id": 247,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar documentación de cualquier modificación realizada al sistema de control."
+        },
+        {
+          "id": 248,
+          "section": "SISTEMA OPERATIVO / PROTECCIONES DE TRANSMISIÓN",
+          "text": "Verificar que las protecciones operativas permanezcan funcionales durante la utilización normal del equipo."
+        }
+      ]
+    }
+  },
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "method": "POST",
+        "schema": {},
+        "triggerAuthenticationType": "All"
+      }
+    }
+  },
+  "actions": {
+    "Parse_envelope": {
+      "type": "ParseJson",
+      "inputs": {
+        "content": "@json(string(triggerBody()))",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "submit",
+                "status"
+              ]
+            },
+            "submissionId": {
+              "type": "string",
+              "minLength": 36,
+              "maxLength": 36
+            },
+            "accessKey": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            "payload": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "mode",
+            "submissionId",
+            "accessKey"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "runAfter": {}
+    },
+    "Validate_access": {
+      "type": "ParseJson",
+      "inputs": {
+        "content": {
+          "valid": "@and(empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(toLower(string(body('Parse_envelope')?['submissionId'])),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'a',''),'b',''),'c',''),'d',''),'e',''),'f',''),'-','')),empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(toLower(string(body('Parse_envelope')?['accessKey'])),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'a',''),'b',''),'c',''),'d',''),'e',''),'f',''),'-','')))"
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "valid": {
+              "enum": [
+                true
+              ]
+            }
+          },
+          "required": [
+            "valid"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "runAfter": {
+        "Parse_envelope": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Find_header": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems"
+        },
+        "parameters": {
+          "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+          "table": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+          "$filter": "@concat('Title eq ',decodeUriComponent('%27'),'PRE2-',body('Parse_envelope')?['submissionId'],decodeUriComponent('%27'))",
+          "$top": 2
+        },
+        "authentication": "@parameters('$authentication')",
+        "retryPolicy": {
+          "type": "none"
+        }
+      },
+      "runAfter": {
+        "Validate_access": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Route": {
+      "type": "If",
+      "expression": "@greater(length(body('Find_header')?['value']),1)",
+      "actions": {
+        "Duplicate_error": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 409,
+            "headers": {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "no-store"
+            },
+            "body": {
+              "error": "La recepción tiene una clave duplicada. No se procesó."
+            }
+          },
+          "runAfter": {},
+          "kind": "Http"
+        }
+      },
+      "else": {
+        "actions": {
+          "Exists": {
+            "type": "If",
+            "expression": "@equals(length(body('Find_header')?['value']),1)",
+            "actions": {
+              "Check_owner": {
+                "type": "If",
+                "expression": "@equals(json(first(body('Find_header')?['value'])?['Notas'])?['accessKey'],body('Parse_envelope')?['accessKey'])",
+                "actions": {
+                  "Current_status": {
+                    "type": "Response",
+                    "inputs": {
+                      "statusCode": 200,
+                      "headers": {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Cache-Control": "no-store"
+                      },
+                      "body": {
+                        "status": "@json(first(body('Find_header')?['value'])?['Notas'])?['status']",
+                        "emailState": "@json(first(body('Find_header')?['value'])?['Notas'])?['emailState']",
+                        "headerId": "@first(body('Find_header')?['value'])?['ID']"
+                      }
+                    },
+                    "runAfter": {},
+                    "kind": "Http"
+                  }
+                },
+                "else": {
+                  "actions": {
+                    "Denied": {
+                      "type": "Response",
+                      "inputs": {
+                        "statusCode": 403,
+                        "headers": {
+                          "Content-Type": "application/json",
+                          "Access-Control-Allow-Origin": "*",
+                          "Cache-Control": "no-store"
+                        },
+                        "body": {
+                          "error": "No se encontró una recepción para este comprobante."
+                        }
+                      },
+                      "runAfter": {},
+                      "kind": "Http"
+                    }
+                  }
+                },
+                "runAfter": {}
+              }
+            },
+            "else": {
+              "actions": {
+                "New_request": {
+                  "type": "If",
+                  "expression": "@equals(body('Parse_envelope')?['mode'],'submit')",
+                  "actions": {
+                    "Parse_payload": {
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": "@body('Parse_envelope')?['payload']",
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "draftId": {
+                              "type": "string",
+                              "minLength": 36,
+                              "maxLength": 36
+                            },
+                            "general": {
+                              "type": "object",
+                              "properties": {
+                                "date": {
+                                  "type": "string",
+                                  "minLength": 10,
+                                  "maxLength": 10
+                                },
+                                "equipment": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "well": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "location": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 255
+                                },
+                                "operator": {
+                                  "enum": [
+                                    "",
+                                    "YPF",
+                                    "TotalEnergies",
+                                    "Vista",
+                                    "PAE",
+                                    "Otra"
+                                  ]
+                                },
+                                "company": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 255
+                                },
+                                "inspectors": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "supervisor": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 255
+                                },
+                                "auditDate": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 10
+                                },
+                                "contract": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 255
+                                },
+                                "representative": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 255
+                                },
+                                "notes": {
+                                  "type": "string",
+                                  "minLength": 0,
+                                  "maxLength": 6000
+                                }
+                              },
+                              "required": [
+                                "date",
+                                "equipment",
+                                "well",
+                                "location",
+                                "operator",
+                                "company",
+                                "inspectors",
+                                "supervisor",
+                                "auditDate",
+                                "contract",
+                                "representative",
+                                "notes"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "answers": {
+                              "type": "array",
+                              "minItems": 1,
+                              "maxItems": 248,
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 248
+                                  },
+                                  "state": {
+                                    "enum": [
+                                      "OK",
+                                      "NO_OK",
+                                      "EN_PROC",
+                                      "NA",
+                                      "SIN_REVISAR"
+                                    ]
+                                  },
+                                  "responsible": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 255
+                                  },
+                                  "deadline": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 10
+                                  },
+                                  "action": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 6000
+                                  },
+                                  "evidence": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 6000
+                                  },
+                                  "observation": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 6000
+                                  },
+                                  "finalState": {
+                                    "enum": [
+                                      "PENDIENTE",
+                                      "CERRADO"
+                                    ]
+                                  },
+                                  "closedAt": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 10
+                                  },
+                                  "closureEvidence": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 6000
+                                  },
+                                  "verifiedBy": {
+                                    "type": "string",
+                                    "minLength": 0,
+                                    "maxLength": 255
+                                  },
+                                  "photo": {
+                                    "anyOf": [
+                                      {
+                                        "type": "null"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 36,
+                                            "maxLength": 36
+                                          },
+                                          "contentBase64": {
+                                            "type": "string",
+                                            "minLength": 100,
+                                            "maxLength": 1333336
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "contentBase64"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "state",
+                                  "responsible",
+                                  "deadline",
+                                  "action",
+                                  "evidence",
+                                  "observation",
+                                  "finalState",
+                                  "closedAt",
+                                  "closureEvidence",
+                                  "verifiedBy",
+                                  "photo"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "closed": {
+                              "type": "boolean"
+                            },
+                            "closedAt": {
+                              "type": "string",
+                              "minLength": 0,
+                              "maxLength": 10
+                            }
+                          },
+                          "required": [
+                            "draftId",
+                            "general",
+                            "answers",
+                            "closed",
+                            "closedAt"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "runAfter": {}
+                    },
+                    "Invalid_items": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Parse_payload')?['answers']",
+                        "where": "@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),or(empty(trim(item()?['responsible'])),empty(item()?['deadline']),empty(trim(item()?['action'])),empty(trim(item()?['evidence'])),empty(item()?['photo']))),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(toLower(string(item()?['photo']?['id'])),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'a',''),'b',''),'c',''),'d',''),'e',''),'f',''),'-',''))))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(equals(item()?['finalState'],'CERRADO'),or(empty(item()?['closedAt']),empty(trim(item()?['closureEvidence'])),empty(trim(item()?['verifiedBy'])))),and(body('Parse_payload')?['closed'],or(equals(item()?['state'],'SIN_REVISAR'),and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),not(equals(item()?['finalState'],'CERRADO'))))))"
+                      },
+                      "runAfter": {
+                        "Parse_payload": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Item_ids": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Parse_payload')?['answers']",
+                        "select": {
+                          "id": "@item()?['id']"
+                        }
+                      },
+                      "runAfter": {
+                        "Invalid_items": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Validate": {
+                      "type": "If",
+                      "expression": "@and(empty(body('Invalid_items')),equals(length(body('Item_ids')),length(union(body('Item_ids'),body('Item_ids')))),not(empty(trim(body('Parse_payload')?['general']?['equipment']))),not(empty(trim(body('Parse_payload')?['general']?['well']))),not(empty(trim(body('Parse_payload')?['general']?['inspectors']))),or(not(body('Parse_payload')?['closed']),and(equals(length(body('Parse_payload')?['answers']),248),not(empty(body('Parse_payload')?['closedAt'])))))",
+                      "actions": {
+                        "Metadata_processing": {
+                          "type": "Compose",
+                          "inputs": {
+                            "version": 2,
+                            "draftId": "@body('Parse_payload')?['draftId']",
+                            "accessKey": "@body('Parse_envelope')?['accessKey']",
+                            "status": "processing",
+                            "emailState": "pending",
+                            "location": "@body('Parse_payload')?['general']?['location']",
+                            "company": "@body('Parse_payload')?['general']?['company']",
+                            "supervisor": "@body('Parse_payload')?['general']?['supervisor']",
+                            "notes": "@body('Parse_payload')?['general']?['notes']"
+                          },
+                          "runAfter": {}
+                        },
+                        "Create_header": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "PostItem"
+                            },
+                            "parameters": {
+                              "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                              "table": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+                              "item/Title": "@concat('PRE2-',body('Parse_envelope')?['submissionId'])",
+                              "item/Equipo": "@body('Parse_payload')?['general']?['equipment']",
+                              "item/Operadora/Value": "@if(empty(body('Parse_payload')?['general']?['operator']),null,body('Parse_payload')?['general']?['operator'])",
+                              "item/Contrato": "@body('Parse_payload')?['general']?['contract']",
+                              "item/FechaRelevamiento": "@if(empty(body('Parse_payload')?['general']?['date']),null,concat(body('Parse_payload')?['general']?['date'],'T12:00:00Z'))",
+                              "item/Pozo": "@body('Parse_payload')?['general']?['well']",
+                              "item/AuditoriaProgramada": "@if(empty(body('Parse_payload')?['general']?['auditDate']),null,concat(body('Parse_payload')?['general']?['auditDate'],'T12:00:00Z'))",
+                              "item/EquipoRecorrida": "@body('Parse_payload')?['general']?['inspectors']",
+                              "item/CompanyRepresentative": "@body('Parse_payload')?['general']?['representative']",
+                              "item/Notas": "@string(outputs('Metadata_processing'))",
+                              "item/Cerrada": false,
+                              "item/AppVersion": "2.0.0"
+                            },
+                            "authentication": "@parameters('$authentication')",
+                            "retryPolicy": {
+                              "type": "none"
+                            }
+                          },
+                          "runAfter": {
+                            "Metadata_processing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Response_accepted": {
+                          "type": "Response",
+                          "inputs": {
+                            "statusCode": 202,
+                            "headers": {
+                              "Content-Type": "application/json",
+                              "Access-Control-Allow-Origin": "*",
+                              "Cache-Control": "no-store"
+                            },
+                            "body": {
+                              "status": "processing",
+                              "headerId": "@outputs('Create_header')?['body/ID']"
+                            }
+                          },
+                          "runAfter": {
+                            "Create_header": [
+                              "Succeeded"
+                            ]
+                          },
+                          "kind": "Http"
+                        },
+                        "Process": {
+                          "type": "Scope",
+                          "actions": {
+                            "Save_items": {
+                              "type": "Foreach",
+                              "foreach": "@body('Parse_payload')?['answers']",
+                              "runAfter": {},
+                              "runtimeConfiguration": {
+                                "concurrency": {
+                                  "repetitions": 5
+                                }
+                              },
+                              "actions": {
+                                "Item_evidence": {
+                                  "type": "Compose",
+                                  "inputs": {
+                                    "observation": "@items('Save_items')?['observation']",
+                                    "evidence": "@items('Save_items')?['evidence']",
+                                    "closureEvidence": "@items('Save_items')?['closureEvidence']",
+                                    "verifiedBy": "@items('Save_items')?['verifiedBy']",
+                                    "photoId": "@items('Save_items')?['photo']?['id']"
+                                  },
+                                  "runAfter": {}
+                                },
+                                "Create_detail": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                      "connectionName": "shared_sharepointonline",
+                                      "operationId": "PostItem"
+                                    },
+                                    "parameters": {
+                                      "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                                      "table": "e481391a-d38f-4fe7-9675-7130d030a100",
+                                      "item/Title": "@concat('PRE2-',body('Parse_envelope')?['submissionId'],'-',string(items('Save_items')?['id']))",
+                                      "item/Recorrida/Id": "@outputs('Create_header')?['body/ID']",
+                                      "item/ItemId": "@items('Save_items')?['id']",
+                                      "item/Zona": "@parameters('catalog')[sub(items('Save_items')?['id'],1)]?['section']",
+                                      "item/ItemTexto": "@parameters('catalog')[sub(items('Save_items')?['id'],1)]?['text']",
+                                      "item/Estado/Value": "@items('Save_items')?['state']",
+                                      "item/Responsable": "@items('Save_items')?['responsible']",
+                                      "item/Plazo": "@if(empty(items('Save_items')?['deadline']),null,concat(items('Save_items')?['deadline'],'T12:00:00Z'))",
+                                      "item/AccionCorrectiva": "@items('Save_items')?['action']",
+                                      "item/EstadoFinal/Value": "@items('Save_items')?['finalState']",
+                                      "item/FechaVerif": "@if(empty(items('Save_items')?['closedAt']),null,concat(items('Save_items')?['closedAt'],'T12:00:00Z'))",
+                                      "item/Observaciones": "@string(outputs('Item_evidence'))",
+                                      "item/Equipo": "@body('Parse_payload')?['general']?['equipment']",
+                                      "item/FotosCount": 0
+                                    },
+                                    "authentication": "@parameters('$authentication')",
+                                    "retryPolicy": {
+                                      "type": "none"
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Item_evidence": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Has_photo": {
+                                  "type": "If",
+                                  "expression": "@not(empty(items('Save_items')?['photo']))",
+                                  "actions": {
+                                    "Attach_photo": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                          "connectionName": "shared_sharepointonline",
+                                          "operationId": "CreateAttachment"
+                                        },
+                                        "parameters": {
+                                          "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                                          "table": "e481391a-d38f-4fe7-9675-7130d030a100",
+                                          "itemId": "@outputs('Create_detail')?['body/ID']",
+                                          "displayName": "@concat('foto-',string(items('Save_items')?['id']),'-',items('Save_items')?['photo']?['id'],'.jpg')",
+                                          "body": "@base64ToBinary(items('Save_items')?['photo']?['contentBase64'])"
+                                        },
+                                        "authentication": "@parameters('$authentication')",
+                                        "retryPolicy": {
+                                          "type": "none"
+                                        }
+                                      },
+                                      "runAfter": {}
+                                    },
+                                    "Confirm_photo": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                          "connectionName": "shared_sharepointonline",
+                                          "operationId": "PatchItem"
+                                        },
+                                        "parameters": {
+                                          "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                                          "table": "e481391a-d38f-4fe7-9675-7130d030a100",
+                                          "id": "@outputs('Create_detail')?['body/ID']",
+                                          "item/Title": "@concat('PRE2-',body('Parse_envelope')?['submissionId'],'-',string(items('Save_items')?['id']))",
+                                          "item/FotosCount": 1
+                                        },
+                                        "authentication": "@parameters('$authentication')",
+                                        "retryPolicy": {
+                                          "type": "none"
+                                        }
+                                      },
+                                      "runAfter": {
+                                        "Attach_photo": [
+                                          "Succeeded"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "else": {
+                                    "actions": {}
+                                  },
+                                  "runAfter": {
+                                    "Create_detail": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "Metadata_sending": {
+                              "type": "Compose",
+                              "inputs": {
+                                "version": 2,
+                                "draftId": "@body('Parse_payload')?['draftId']",
+                                "accessKey": "@body('Parse_envelope')?['accessKey']",
+                                "status": "processing",
+                                "emailState": "sending",
+                                "location": "@body('Parse_payload')?['general']?['location']",
+                                "company": "@body('Parse_payload')?['general']?['company']",
+                                "supervisor": "@body('Parse_payload')?['general']?['supervisor']",
+                                "notes": "@body('Parse_payload')?['general']?['notes']"
+                              },
+                              "runAfter": {
+                                "Save_items": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Save_before_email": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "PatchItem"
+                                },
+                                "parameters": {
+                                  "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                                  "table": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+                                  "id": "@outputs('Create_header')?['body/ID']",
+                                  "item/Notas": "@string(outputs('Metadata_sending'))",
+                                  "item/Cerrada": "@body('Parse_payload')?['closed']",
+                                  "item/FechaCierre": "@if(empty(body('Parse_payload')?['closedAt']),null,concat(body('Parse_payload')?['closedAt'],'T12:00:00Z'))"
+                                },
+                                "authentication": "@parameters('$authentication')",
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {
+                                "Metadata_sending": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Send_email": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                  "connectionName": "shared_office365",
+                                  "operationId": "SendEmailV2"
+                                },
+                                "parameters": {
+                                  "emailMessage/To": "jcastro@tackertools.com",
+                                  "emailMessage/Subject": "@concat('Preauditoría recibida - ',body('Parse_payload')?['general']?['equipment'],' - ',body('Parse_envelope')?['submissionId'])",
+                                  "emailMessage/Body": "@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['equipment']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Pozo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['well']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Inspección: ',replace(replace(replace(string(body('Parse_payload')?['draftId']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</p><p>Los ítems y sus evidencias fotográficas fueron guardados en SharePoint.</p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(outputs('Create_header')?['body/ID']),'\">Abrir inspección</a></p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(outputs('Create_header')?['body/ID']),'&amp;FilterLookupId1=1\">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')",
+                                  "emailMessage/Importance": "Normal"
+                                },
+                                "authentication": "@parameters('$authentication')",
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {
+                                "Save_before_email": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Metadata_complete": {
+                              "type": "Compose",
+                              "inputs": {
+                                "version": 2,
+                                "draftId": "@body('Parse_payload')?['draftId']",
+                                "accessKey": "@body('Parse_envelope')?['accessKey']",
+                                "status": "complete",
+                                "emailState": "sent",
+                                "location": "@body('Parse_payload')?['general']?['location']",
+                                "company": "@body('Parse_payload')?['general']?['company']",
+                                "supervisor": "@body('Parse_payload')?['general']?['supervisor']",
+                                "notes": "@body('Parse_payload')?['general']?['notes']"
+                              },
+                              "runAfter": {
+                                "Send_email": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Confirm_complete": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "PatchItem"
+                                },
+                                "parameters": {
+                                  "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                                  "table": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+                                  "id": "@outputs('Create_header')?['body/ID']",
+                                  "item/Notas": "@string(outputs('Metadata_complete'))"
+                                },
+                                "authentication": "@parameters('$authentication')",
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {
+                                "Metadata_complete": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Response_accepted": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Record_failure": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "PatchItem"
+                            },
+                            "parameters": {
+                              "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                              "table": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+                              "id": "@outputs('Create_header')?['body/ID']",
+                              "item/Notas": "@string(setProperty(setProperty(outputs('Metadata_processing'),'status','failed'),'emailState','unconfirmed'))",
+                              "item/Cerrada": false
+                            },
+                            "authentication": "@parameters('$authentication')",
+                            "retryPolicy": {
+                              "type": "none"
+                            }
+                          },
+                          "runAfter": {
+                            "Process": [
+                              "Failed",
+                              "TimedOut"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Invalid_response": {
+                            "type": "Response",
+                            "inputs": {
+                              "statusCode": 422,
+                              "headers": {
+                                "Content-Type": "application/json",
+                                "Access-Control-Allow-Origin": "*",
+                                "Cache-Control": "no-store"
+                              },
+                              "body": {
+                                "error": "Revisá los campos obligatorios, las fotos y los datos de cierre."
+                              }
+                            },
+                            "runAfter": {},
+                            "kind": "Http"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Item_ids": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Not_found": {
+                        "type": "Response",
+                        "inputs": {
+                          "statusCode": 200,
+                          "headers": {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                            "Cache-Control": "no-store"
+                          },
+                          "body": {
+                            "status": "not_found"
+                          }
+                        },
+                        "runAfter": {},
+                        "kind": "Http"
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              }
+            },
+            "runAfter": {}
+          }
+        }
+      },
+      "runAfter": {
+        "Find_header": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Invalid_envelope": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 400,
+        "headers": {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "no-store"
+        },
+        "body": {
+          "error": "Solicitud inválida."
+        }
+      },
+      "runAfter": {
+        "Parse_envelope": [
+          "Failed",
+          "TimedOut"
+        ]
+      },
+      "kind": "Http"
+    },
+    "Invalid_access": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 400,
+        "headers": {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "no-store"
+        },
+        "body": {
+          "error": "Comprobante inválido."
+        }
+      },
+      "runAfter": {
+        "Validate_access": [
+          "Failed",
+          "TimedOut"
+        ]
+      },
+      "kind": "Http"
+    },
+    "Invalid_payload": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 400,
+        "headers": {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "no-store"
+        },
+        "body": {
+          "error": "No se pudo procesar la solicitud. Conservá el comprobante."
+        }
+      },
+      "runAfter": {
+        "Route": [
+          "Failed",
+          "TimedOut"
+        ]
+      },
+      "kind": "Http"
+    }
+  },
+  "outputs": {}
+}

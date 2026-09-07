@@ -1,5 +1,5 @@
 export const STATES = ['OK', 'NO OK', 'EN PROC', 'N/A'];
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '2.0.0';
 export const CATALOG_VERSION = 'generico-2026-09-v1';
 export const OPERATORS = ['YPF', 'TotalEnergies', 'Vista', 'PAE', 'Otra'];
 const remoteStates = {
@@ -64,6 +64,17 @@ export function newDraft(catalog, id) {
 export function validateItem(answer = {}) {
   const errors = [];
   if (answer.state && !STATES.includes(answer.state)) errors.push('Estado no válido.');
+  if (
+    isFinding(answer) &&
+    (!answer.photo ||
+      answer.photo.mime !== 'image/jpeg' ||
+      !answer.photo.id ||
+      !answer.photo.name ||
+      !Number.isFinite(answer.photo.size) ||
+      answer.photo.size <= 0 ||
+      answer.photo.size > 1000000)
+  )
+    errors.push('Foto: obligatoria para NO OK o EN PROC.');
   if (isFinding(answer))
     for (const [key, label] of Object.entries({
       responsible: 'Responsable',
@@ -243,6 +254,20 @@ export function importDraft(raw, catalog, id) {
   for (const [key, value] of Object.entries(source.answers)) {
     if (!allowed.has(key) || !object(value)) throw Error('Ítem desconocido o inválido.');
     const answer = {};
+    if (value.photo !== undefined) {
+      const p = value.photo;
+      if (
+        !object(p) ||
+        typeof p.id !== 'string' ||
+        typeof p.name !== 'string' ||
+        p.mime !== 'image/jpeg' ||
+        !Number.isFinite(p.size) ||
+        p.size <= 0 ||
+        p.size > 1000000
+      )
+        throw Error('Foto importada inválida.');
+      answer.photo = { id: p.id, name: p.name, mime: p.mime, size: p.size };
+    }
     for (const field of answerKeys)
       if (value[field] !== undefined) {
         if (typeof value[field] !== 'string' || value[field].length > 6000)

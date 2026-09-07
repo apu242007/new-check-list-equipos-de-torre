@@ -6,14 +6,9 @@ import {
   validateDraft,
   importDraft,
   isFinding,
-  CATALOG_VERSION,
-  fromItemFields,
-  toItemFields,
-  toHeaderFields,
 } from './domain.mjs';
-import { GraphClient, saveInspection } from './sharepoint.mjs';
-import { createAuth } from './auth.mjs';
-import { verifySchema } from './schema.mjs';
+import { sendInspection } from './delivery.mjs';
+import { preparePhoto, savePhoto, getPhoto, photoMetadata } from './photos.mjs';
 const $ = (selector) => document.querySelector(selector);
 const KEY = 'tacker-preauditoria-generica-v1';
 const escape = (value) =>
@@ -25,12 +20,10 @@ const slug = (state) => ({ OK: 'ok', 'NO OK': 'no-ok', 'EN PROC': 'en-proc', 'N/
 let catalog,
   config,
   draft,
-  auth,
-  api,
   busy = false,
   storageFailed = false,
   otherTab = false,
-  loading = false;
+  photoBusy = false;
 function notice(message, warning = false) {
   $('#notice').textContent = message;
   $('#notice').classList.toggle('warning', warning);
@@ -107,7 +100,7 @@ function itemMarkup(item) {
   <div class="state-row" role="group" aria-label="Estado del ítem ${item.id}"><span class="state-caption">ESTADO</span>${STATES.map((state) => `<label class="state-option ${slug(state)}"><input type="radio" name="state-${item.id}" value="${state}" ${a.state === state ? 'checked' : ''}><span>${state}</span></label>`).join('')}<button type="button" class="clear-state">Quitar selección</button></div>
   <details class="item-details" ${isFinding(a) || a.finalState === 'CERRADO' ? 'open' : ''}><summary>Observación, evidencia y seguimiento</summary><div class="fields">
     ${field('Observación', 'observation', 'textarea', true)}${field('Evidencia / referencia documental', 'evidence', 'textarea', true)}
-    <span class="field-help wide">Registrá una descripción verificable, una referencia documental o un enlace a la fotografía/documento en SharePoint. Los archivos se mantienen en su ubicación original.</span>
+    <div class="photo-field wide"><label><span>Foto del ítem</span><input type="file" class="photo-input" accept="image/jpeg,image/png,image/webp" aria-label="Foto del ítem ${item.id}"></label><span class="field-help">Obligatoria para NO OK y EN PROC. Se adjunta al ítem en SharePoint. JPG, PNG o WebP, hasta 15 MB.</span><div class="photo-preview" aria-live="polite"></div><button type="button" class="remove-photo" ${a.photo ? '' : 'hidden'}>Quitar foto</button></div>
     ${field('Responsable', 'responsible', 'text')}${field('Plazo de resolución', 'deadline', 'date')}${field('Acción correctiva propuesta', 'action', 'textarea', true)}
     <div class="closure-fields"><label><span id="final-label-${item.id}">Estado final</span><select aria-labelledby="final-label-${item.id}" data-answer="finalState" id="item-${item.id}-finalState"><option value="">Sin definir</option><option ${a.finalState === 'PENDIENTE' ? 'selected' : ''}>PENDIENTE</option><option ${a.finalState === 'CERRADO' ? 'selected' : ''}>CERRADO</option></select></label>
     ${field('Fecha de verificación / cierre', 'closedAt', 'date')}${field('Evidencia de cierre', 'closureEvidence', 'textarea', true)}${field('Verificado por', 'verifiedBy', 'text')}</div>
@@ -132,7 +125,10 @@ function render() {
         `<section class="panel check-section" id="section-${s.id}"><div class="panel-heading"><span class="section-no">${String(s.id).padStart(2, '0')}</span><h2>${escape(s.title)}</h2></div>${s.items.map(itemMarkup).join('')}</section>`,
     )
     .join('');
-  for (const item of catalog.flatMap((s) => s.items)) updateRequirements(item.id);
+  for (const item of catalog.flatMap((s) => s.items)) {
+    updateRequirements(item.id);
+    void showPhoto(item.id);
+  }
   $('#errors').hidden = true;
   $('#document-state').textContent = draft.closed
     ? 'Inspección declarada cerrada'
@@ -148,6 +144,7 @@ function updateRequirements(id) {
     item.querySelector(`[data-answer="${key}"]`).required = isFinding(a);
   for (const key of ['closedAt', 'closureEvidence', 'verifiedBy'])
     item.querySelector(`[data-answer="${key}"]`).required = a.finalState === 'CERRADO';
+  item.querySelector('.photo-input').required = isFinding(a) && !a.photo;
   if (isFinding(a) || a.finalState === 'CERRADO') item.querySelector('details').open = true;
 }
 function showErrors() {
@@ -204,16 +201,9 @@ function filterItems(query) {
 function setBusy(value) {
   busy = value;
   $('#editable').disabled = value || otherTab;
-  for (const id of ['new', 'open', 'import', 'save', 'validate', 'connect'])
+  for (const id of ['new', 'open', 'import', 'save', 'validate'])
     $(`#${id}`).disabled = value || otherTab;
   $('#save').textContent = value ? 'Guardando…' : 'Guardar en SharePoint ↗';
-}
-function requireConnection() {
-  if (!auth)
-    throw Error(
-      'La conexión Microsoft aún no fue configurada para esta página. Podés completar y exportar el borrador.',
-    );
-  if (!auth.account()) throw Error('Conectá tu cuenta Microsoft para usar SharePoint.');
 }
 function guard(handler) {
   return async (event) => {
@@ -236,8 +226,16 @@ function replaceDraft(next) {
   render();
   return true;
 }
-function exportDraft() {
-  const copy = { ...draft, remote: undefined };
+async function exportDraft() {
+  const photoFiles = [];
+  for (const answer of Object.values(draft.answers)) {
+    if (answer.photo) {
+      const photo = await getPhoto(answer.photo.id);
+      if (!photo) throw Error('No se pudo recuperar una foto para exportar.');
+      photoFiles.push(photo);
+    }
+  }
+  const copy = { ...draft, remote: undefined, photoFiles };
   const blob = new Blob([JSON.stringify(copy, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -246,75 +244,62 @@ function exportDraft() {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-async function openRemote(id) {
-  if (loading) return;
-  loading = true;
+async function showPhoto(id) {
+  const item = $(`#item-${id}`),
+    answer = draft.answers[id] || {},
+    preview = item.querySelector('.photo-preview');
+  preview.replaceChildren();
+  item.querySelector('.remove-photo').hidden = !answer.photo;
+  if (!answer.photo) return;
   try {
-    const header = await api.request(
-      `${api.path(config.headerListId)}/${encodeURIComponent(id)}?$expand=fields`,
-    );
-    const h = header.fields;
-    const mark = '\n\n[PREAUDITORIA-GENERICA-V1]\n';
-    const index = (h.Notas || '').lastIndexOf(mark);
-    if (index < 0 || !/^PRE-[0-9a-f-]{36}$/i.test(h.Title || ''))
-      throw Error('La inspección no pertenece a este checklist genérico.');
-    const meta = JSON.parse(h.Notas.slice(index + mark.length));
-    if (meta.catalogVersion !== CATALOG_VERSION) throw Error('Versión de catálogo incompatible.');
-    const next = newDraft(catalog, h.Title.slice(4));
-    Object.assign(next.general, {
-      date: (h.FechaRelevamiento || '').slice(0, 10),
-      equipment: h.Equipo || '',
-      well: h.Pozo || '',
-      location: meta.location || '',
-      operator: h.Operadora || '',
-      company: meta.company || '',
-      inspectors: h.EquipoRecorrida || '',
-      supervisor: meta.supervisor || '',
-      auditDate: (h.AuditoriaProgramada || '').slice(0, 10),
-      contract: h.Contrato || '',
-      representative: h.CompanyRepresentative || '',
-      notes: h.Notas.slice(0, index),
-    });
-    next.closed = !!h.Cerrada;
-    next.closedAt = (h.FechaCierre || '').slice(0, 10);
-    const rows = await api.all(
-      `${api.path(config.itemListId)}?$expand=fields&$filter=${encodeURIComponent(`fields/RecorridaLookupId eq '${id}'`)}`,
-    );
-    const map = new Map(catalog.flatMap((s) => s.items.map((i) => [i.id, i])));
-    for (const row of rows) {
-      const f = row.fields,
-        item = map.get(f.ItemId);
-      if (
-        !item ||
-        f.ItemTexto !== item.text ||
-        f.Title !== `PRE-${next.id}-${item.id}` ||
-        next.answers[item.id]
-      )
-        throw Error('Ítems incompatibles o duplicados. Se conserva el borrador actual.');
-      next.answers[item.id] = fromItemFields(f);
-      next.remote.items[item.id] = {
-        id: row.id,
-        etag: row.eTag || f['@odata.etag'],
-        signature: JSON.stringify(
-          toItemFields(item, next.answers[item.id], id, next.general.equipment, next.id),
-        ),
-      };
-    }
-    next.remote.header = {
-      id,
-      etag: header.eTag || h['@odata.etag'],
-      signature: JSON.stringify(toHeaderFields(next)),
-    };
-    next.remote.savedAt = header.lastModifiedDateTime;
-    if (replaceDraft(next)) {
-      $('#open-dialog').close();
-      notice('Inspección recuperada de SharePoint.');
-    }
-  } finally {
-    loading = false;
+    const photo = await getPhoto(answer.photo.id);
+    if (!photo) throw Error();
+    const img = document.createElement('img');
+    img.src = 'data:image/jpeg;base64,' + photo.contentBase64;
+    img.alt = `Evidencia fotográfica del ítem ${id}`;
+    img.loading = 'lazy';
+    preview.append(img);
+  } catch {
+    preview.textContent = 'La foto no está disponible. Volvé a adjuntarla antes de enviar.';
   }
 }
 function bind() {
+  $('#checklist').addEventListener(
+    'change',
+    guard(async (e) => {
+      if (!e.target.matches('.photo-input') || busy || otherTab) return;
+      const file = e.target.files[0];
+      if (!file) return;
+      const id = e.target.closest('[data-item-id]').dataset.itemId;
+      photoBusy = true;
+      setBusy(true);
+      try {
+        const photo = await preparePhoto(file);
+        await savePhoto(photo);
+        draft.answers[id] ||= {};
+        draft.answers[id].photo = photoMetadata(photo);
+        localChange();
+        updateRequirements(id);
+        await showPhoto(id);
+        notice('Foto guardada con el borrador. Se adjuntará al enviar.');
+      } finally {
+        e.target.value = '';
+        photoBusy = false;
+        setBusy(false);
+      }
+    }),
+  );
+  $('#checklist').addEventListener(
+    'click',
+    guard(async (e) => {
+      if (!e.target.matches('.remove-photo') || busy || otherTab) return;
+      const id = e.target.closest('[data-item-id]').dataset.itemId;
+      delete draft.answers[id].photo;
+      localChange();
+      updateRequirements(id);
+      await showPhoto(id);
+    }),
+  );
   $('#inspection').addEventListener('submit', (e) => e.preventDefault());
   $('#inspection').addEventListener('input', (e) => {
     const target = e.target;
@@ -362,7 +347,7 @@ function bind() {
         'El registro cumple las validaciones de carga. Esto no certifica la condición técnica del equipo.',
       );
   };
-  $('#export').onclick = exportDraft;
+  $('#export').onclick = guard(exportDraft);
   $('#new').onclick = guard(() => {
     if (replaceDraft(newDraft(catalog, crypto.randomUUID())))
       notice('Nueva inspección. Todos los estados están sin seleccionar.');
@@ -371,26 +356,41 @@ function bind() {
     const file = e.target.files[0];
     if (!file) return;
     try {
-      if (file.size > 4_000_000) throw Error('El archivo supera el tamaño permitido.');
-      const next = importDraft(await file.text(), catalog, crypto.randomUUID());
+      if (file.size > 350000000) throw Error('El archivo supera el tamaño permitido.');
+      const source = JSON.parse(await file.text());
+      const next = importDraft(
+        JSON.stringify({ ...source, photoFiles: undefined, delivery: undefined }),
+        catalog,
+        crypto.randomUUID(),
+      );
+      const photos = source.photoFiles || [];
+      if (!Array.isArray(photos) || photos.length > 248) throw Error('Fotos importadas inválidas.');
+      for (const answer of Object.values(next.answers)) {
+        if (!answer.photo) continue;
+        const photo = photos.find((p) => p.id === answer.photo.id);
+        if (
+          !photo ||
+          typeof photo.contentBase64 !== 'string' ||
+          photo.contentBase64.length > 1333336 ||
+          !photo.contentBase64.startsWith('/9j/')
+        )
+          throw Error('La copia no contiene todas las fotos.');
+        const bytes = Uint8Array.from(atob(photo.contentBase64), (c) => c.charCodeAt(0));
+        const normalized = await preparePhoto(
+          new File([bytes], 'importada.jpg', { type: 'image/jpeg' }),
+        );
+        await savePhoto(normalized);
+        answer.photo = photoMetadata(normalized);
+      }
       if (replaceDraft(next))
         notice('Copia importada como una inspección nueva. El original no se modifica.');
     } finally {
       e.target.value = '';
     }
   });
-  $('#connect').onclick = guard(async () => {
-    if (!auth)
-      throw Error(
-        'Falta configurar la aplicación Microsoft Entra para esta página. El borrador local está disponible.',
-      );
-    const account = await auth.login();
-    $('#connection').textContent = `Microsoft conectado · ${account.name || account.username}`;
-    notice('Cuenta conectada. Ya podés abrir o guardar inspecciones según tus permisos.');
-  });
   $('#save').onclick = guard(async () => {
     if (!showErrors()) return;
-    requireConnection();
+    if (photoBusy) throw Error('Esperá a que termine de guardarse la foto.');
     if (storageFailed)
       throw Error(
         'Restablecé el almacenamiento local antes de sincronizar para poder recuperar un guardado interrumpido.',
@@ -404,40 +404,27 @@ function bind() {
       setBusy(true);
       try {
         persist();
-        await verifySchema(api, config);
-        await saveInspection(api, config, draft, catalog, persist);
+        await sendInspection(config, draft, catalog, {
+          getPhoto,
+          checkpoint: persist,
+          onStatus: notice,
+        });
         $('#document-state').textContent = draft.closed
           ? 'Inspección cerrada y guardada'
           : 'Inspección guardada en SharePoint';
         $('#save-hint').textContent = 'El borrador local también se conserva.';
-        notice('Se confirmó el guardado de los datos en SharePoint.');
+        notice('Datos y fotos guardados en SharePoint. Correo enviado a jcastro@tackertools.com.');
       } finally {
         setBusy(false);
       }
     });
   });
-  $('#open').onclick = guard(async () => {
-    requireConnection();
-    $('#remote-list').textContent = 'Consultando inspecciones…';
-    $('#open-dialog').showModal();
-    const rows = await api.all(
-      `${api.path(config.headerListId)}?$expand=fields&$filter=${encodeURIComponent("fields/AppVersion eq '1.0.0'")}`,
+  $('#open').onclick = () =>
+    window.open(
+      config.siteUrl + '/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/AllItems.aspx',
+      '_blank',
+      'noopener,noreferrer',
     );
-    const list = $('#remote-list');
-    list.textContent = '';
-    for (const row of rows
-      .filter((r) => (r.fields.Notas || '').includes(CATALOG_VERSION))
-      .reverse()) {
-      const button = document.createElement('button');
-      button.className = 'button remote-row';
-      button.textContent = `${row.fields.Equipo || 'Sin equipo'} · ${row.fields.Pozo || 'Sin pozo'} · ${(row.fields.FechaRelevamiento || '').slice(0, 10)} · ID ${row.id}`;
-      button.onclick = guard(() => openRemote(row.id));
-      list.append(button);
-    }
-    if (!list.childNodes.length)
-      list.textContent = 'Todavía no hay inspecciones de este checklist genérico.';
-  });
-  $('#close-dialog').onclick = () => $('#open-dialog').close();
   let printState = [];
   function beforePrint() {
     filterItems('');
@@ -491,8 +478,12 @@ async function start() {
       const saved = JSON.parse(raw);
       if (!/^[0-9a-f-]{36}$/i.test(saved.id || '')) throw Error('Identificador inválido.');
       draft = importDraft(raw, catalog, saved.id);
-      if (saved.remote?.items && typeof saved.remote.items === 'object')
-        draft.remote = saved.remote;
+      if (
+        saved.delivery &&
+        /^[0-9a-f-]{36}$/i.test(saved.delivery.submissionId || '') &&
+        /^[0-9a-f]{64}$/.test(saved.delivery.accessKey || '')
+      )
+        draft.delivery = saved.delivery;
     }
   } catch {
     otherTab = true;
@@ -508,19 +499,8 @@ async function start() {
       persist();
     } catch {}
   } else setBusy(false);
-  try {
-    auth = await createAuth(config);
-    if (auth) {
-      api = new GraphClient(config, () => auth.getToken());
-      if (auth.account())
-        $('#connection').textContent =
-          `Microsoft conectado · ${auth.account().name || auth.account().username}`;
-    } else $('#connection').textContent = 'Modo local · conexión Microsoft pendiente de configurar';
-  } catch {
-    notice(
-      'No se pudo iniciar la conexión Microsoft. Podés continuar con el borrador local.',
-      true,
-    );
-  }
+  $('#connection').textContent = config.submissionUrl
+    ? 'Recepción habilitada · No necesitás iniciar sesión'
+    : 'Modo local · recepción pendiente de configurar';
 }
 start().catch((error) => notice(error.message, true));

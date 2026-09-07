@@ -14,7 +14,7 @@
       <a class="brand" href="./" aria-label="Tacker, inicio"
         ><img src="./logo.svg" alt="Tacker Solutions" width="155" height="47" /></a
       ><span class="division">WELL SERVICE <span>/</span> INSPECCIONES</span
-      ><button id="connect" class="button light">Conectar Microsoft</button>
+      ><span class="public-access">Carga de campo · Sin iniciar sesión</span>
     </header>
     <div class="workspace">
       <aside class="sidebar" aria-label="Secciones del checklist">
@@ -31,18 +31,18 @@
               Registrá las condiciones del equipo y el seguimiento de cada acción correctiva.
             </p>
           </div>
-          <span class="document-tag">GENÉRICO<br /><strong>REV. 01</strong></span>
+          <span class="document-tag">GENÉRICO<br /><strong>REV. 02</strong></span>
         </div>
         <div class="toolbar" aria-label="Acciones del documento">
           <button id="new" class="button">Nueva inspección</button
-          ><button id="open" class="button">Abrir de SharePoint</button
+          ><button id="open" class="button">Ver SharePoint</button
           ><button id="export" class="button">Exportar borrador</button
           ><label class="button import-label"
             >Importar copia<input id="import" type="file" accept="application/json,.json" /></label
           ><button id="print" class="button">Imprimir / PDF</button>
         </div>
         <div class="connection-line">
-          <span id="connection">Sin conexión a Microsoft</span
+          <span id="connection">Cargando servicio de recepción</span
           ><span id="local-status">Cargando borrador…</span>
         </div>
         <p id="notice" role="status" aria-live="polite"></p>
@@ -119,14 +119,6 @@
         </p>
       </main>
     </div>
-    <dialog id="open-dialog">
-      <div class="dialog-head">
-        <h2>Abrir inspección</h2>
-        <button id="close-dialog" class="button">Cerrar</button>
-      </div>
-      <p>Inspecciones creadas con esta versión del checklist genérico.</p>
-      <div id="remote-list"></div>
-    </dialog>
     <script type="module" src="./app.js"></script>
   </body>
 </html>

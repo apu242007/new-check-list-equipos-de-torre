@@ -21,6 +21,7 @@ const corrected = {
   deadline: '2026-09-09',
   action: 'Reemplazar componente',
   evidence: 'Documento E-12',
+  photo: { id: 'f', name: 'foto.jpg', mime: 'image/jpeg', size: 200 },
 };
 
 test('catálogo conserva exclusivamente cada verificación de las secciones 1 a 16', () => {
