@@ -1,13 +1,21 @@
 # Revisión de entrega
 
-Evaluación al 2026-09-07, después de la prueba real de SharePoint y correo.
+Evaluación al 2026-09-07, después de publicar y comprobar la versión 2.1.
 
-| Eje | Puntaje | Evidencia |
-| --- | --- | --- |
-| Exactitud | 5/5 | Esquema real verificado; estados y columnas coinciden; foto, registro y correo comprobados en una ejecución real. |
-| Completitud | 5/5 | 248 puntos, cuatro estados, acciones, foto obligatoria, cierre, borrador, exportación, flujo y página publicados. |
-| Claridad | 5/5 | Interfaz en español, mensajes separados para recibido, procesando y confirmado, y documentación operativa actualizada. |
-| Accionabilidad | 5/5 | No exige cuenta del inspector; el flujo y las conexiones del propietario ya están activos. |
-| Concisión | 4/5 | La interfaz evita estadísticas y elementos ajenos; la extensión responde a los 248 puntos requeridos. |
+Resumen: **4,8/5** en los cinco ejes de calidad.
 
-Promedio: **4,8/5**. La limitación material es que el endpoint de recepción debe ser público para una página estática. El flujo reduce su alcance con esquema estricto, listas y destinatario fijos, límites de tamaño, datos canónicos del servidor y comprobantes opacos.
+| Eje            | Puntaje | Evidencia                                                                                                                                                                                     |
+| -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Exactitud      | 5/5     | Las listas exactas se verificaron en dominio, flujo, SharePoint y página pública. La prueba real ID 14 confirmó `TKR-11`, `Pampa Energía`, versión 2.1, detalle relacionado y correo enviado. |
+| Completitud    | 5/5     | Se actualizaron los desplegables, la validación, el contrato del flujo, la columna remota, la documentación y el despliegue. Las opciones antiguas de operadora se conservaron.               |
+| Claridad       | 5/5     | La interfaz muestra rótulos y opciones en español; README y contrato enumeran los valores admitidos y la evidencia separa pruebas automáticas de integración real.                            |
+| Accionabilidad | 5/5     | La página y el flujo están activos. Los inspectores pueden seleccionar equipo y operadora y enviar sin iniciar sesión ni recibir credenciales.                                                |
+| Concisión      | 4/5     | La documentación conserva evidencia histórica de las versiones 2.0 y 2.1; esa trazabilidad agrega extensión al registro de pruebas. Una revisión futura puede archivar evidencia obsoleta.    |
+
+Problemas críticos: **ninguno**.
+
+Autoevaluación: el usuario debería coincidir porque el resultado solicitado está visible en producción y respaldado por comprobaciones locales, CI, SharePoint y una recepción real.
+
+Mejoras prioritarias: ninguna pendiente con impacto funcional. La próxima actualización documental puede mover las pruebas históricas a un archivo de versiones.
+
+Veredicto: **entregar tal como está**.
