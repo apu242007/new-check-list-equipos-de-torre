@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 const first = (page) => page.locator('#item-1');
 async function general(page) {
   await page.getByLabel('Fecha de inspección *', { exact: true }).fill('2026-09-07');
-  await page.getByLabel('Equipo / Rig *', { exact: true }).fill('EQ-PRUEBA');
+  await page.getByLabel('Equipo / Rig *', { exact: true }).selectOption('TKR-01');
   await page.getByLabel('Pozo *', { exact: true }).fill('POZO-PRUEBA');
   await page
     .getByLabel('Personal que realiza la inspección *', { exact: true })
@@ -29,6 +29,19 @@ test('inicio sin estados seleccionados, cuatro opciones y sin desborde horizonta
     path: `test-results/inicio-${test.info().project.name}.png`,
     fullPage: false,
   });
+});
+test('equipos y operadoras se eligen desde listas controladas', async ({ page }) => {
+  const equipment = page.getByLabel('Equipo / Rig *', { exact: true });
+  const operator = page.getByLabel('Cliente / Operadora', { exact: true });
+  await expect(equipment).toHaveRole('combobox');
+  await expect(equipment.locator('option')).toHaveCount(8);
+  await equipment.selectOption('TKR-11');
+  await operator.selectOption('Pampa Energía');
+  await expect(equipment).toHaveValue('TKR-11');
+  await expect(operator).toHaveValue('Pampa Energía');
+  await page.reload();
+  await expect(equipment).toHaveValue('TKR-11');
+  await expect(operator).toHaveValue('Pampa Energía');
 });
 test('NO OK muestra y exige todos los campos correctivos; borrar selección no borra evidencia', async ({
   page,
@@ -107,7 +120,7 @@ test('conexión no configurada se explica y no se simula un envío', async ({ pa
 test('exportación e importación crean una copia independiente y escapan contenido', async ({
   page,
 }) => {
-  await page.getByLabel('Equipo / Rig *', { exact: true }).fill('<img src=x onerror=alert(1)>');
+  await page.getByLabel('Pozo *', { exact: true }).fill('<img src=x onerror=alert(1)>');
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Exportar borrador' }).click();
   const download = await downloadPromise;
@@ -118,7 +131,7 @@ test('exportación e importación crean una copia independiente y escapan conten
   page.once('dialog', (d) => d.accept());
   await page.locator('#import').setInputFiles(file);
   await expect(page.locator('#notice')).toContainText('Copia importada');
-  await expect(page.getByLabel('Equipo / Rig *', { exact: true })).toHaveValue(
+  await expect(page.getByLabel('Pozo *', { exact: true })).toHaveValue(
     '<img src=x onerror=alert(1)>',
   );
   expect(
@@ -133,7 +146,7 @@ test('almacenamiento lleno muestra error y permite exportar', async ({ page }) =
       throw new DOMException('Full', 'QuotaExceededError');
     };
   });
-  await page.getByLabel('Equipo / Rig *', { exact: true }).fill('Cambio no guardado');
+  await page.getByLabel('Pozo *', { exact: true }).fill('Cambio no guardado');
   await expect(page.locator('#notice')).toContainText('Exportá el borrador');
   await expect(page.getByRole('button', { name: 'Exportar borrador' })).toBeEnabled();
 });
@@ -162,9 +175,9 @@ test('sin errores de JavaScript y controles accesibles por teclado', async ({ pa
   expect(
     report.violations.map((v) => ({ id: v.id, nodes: v.nodes.slice(0, 3).map((n) => n.target) })),
   ).toEqual([]);
-  await page.getByLabel('Equipo / Rig *', { exact: true }).focus();
+  await page.getByLabel('Pozo *', { exact: true }).focus();
   await page.keyboard.type('EQ-TECLADO');
-  await expect(page.getByLabel('Equipo / Rig *', { exact: true })).toHaveValue('EQ-TECLADO');
+  await expect(page.getByLabel('Pozo *', { exact: true })).toHaveValue('EQ-TECLADO');
   expect(errors).toEqual([]);
 });
 test('otra pestaña bloquea sobrescritura y conserva opción de exportar', async ({
@@ -174,9 +187,9 @@ test('otra pestaña bloquea sobrescritura y conserva opción de exportar', async
   const other = await context.newPage();
   await other.goto('/');
   await expect(other.locator('.check-section')).toHaveCount(16);
-  await other.getByLabel('Equipo / Rig *', { exact: true }).fill('Cambio en otra pestaña');
+  await other.getByLabel('Pozo *', { exact: true }).fill('Cambio en otra pestaña');
   await expect(page.locator('#notice')).toContainText('otra pestaña');
-  await expect(page.getByLabel('Equipo / Rig *', { exact: true })).toBeDisabled();
+  await expect(page.getByLabel('Pozo *', { exact: true })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Exportar borrador' })).toBeEnabled();
   await other.close();
 });

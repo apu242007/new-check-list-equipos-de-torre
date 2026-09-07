@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   STATES,
+  EQUIPMENT_OPTIONS,
+  OPERATORS,
   parseCatalog,
   newDraft,
   validateItem,
@@ -36,6 +38,39 @@ test('catálogo conserva exclusivamente cada verificación de las secciones 1 a 
 test('cuatro estados exactos y ninguna respuesta predeterminada', () => {
   assert.deepEqual(STATES, ['OK', 'NO OK', 'EN PROC', 'N/A']);
   assert.deepEqual(newDraft(catalog, 'test').answers, {});
+});
+test('equipos y operadoras usan las opciones aprobadas', () => {
+  assert.deepEqual(EQUIPMENT_OPTIONS, [
+    'TKR-01',
+    'TKR-05',
+    'TKR-06',
+    'TKR-07',
+    'TKR-08',
+    'TKR-10',
+    'TKR-11',
+  ]);
+  assert.deepEqual(OPERATORS, [
+    'YPF',
+    'PAE',
+    'Pluspetrol',
+    'Vista',
+    'CGC',
+    'Shell Argentina',
+    'Tecpetrol',
+    'CAPSA',
+    'PCR',
+    'TotalEnergies',
+    'Pampa Energía',
+    'Otra',
+  ]);
+  const draft = newDraft(catalog, 'test');
+  Object.assign(draft.general, {
+    date: '2026-09-07',
+    equipment: 'Equipo no registrado',
+    well: 'Pozo',
+    inspectors: 'Inspector',
+  });
+  assert.ok(validateDraft(draft, catalog).some((error) => error.field === 'equipment'));
 });
 test('cada campo correctivo es obligatorio para ambos estados de hallazgo', () => {
   for (const state of ['NO OK', 'EN PROC']) {
