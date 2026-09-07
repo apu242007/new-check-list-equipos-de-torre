@@ -29,7 +29,7 @@ npm start
 
 El workflow `.github/workflows/pages.yml` usa el secreto `TACKER_FLOW_URL`, compila, ejecuta pruebas unitarias, auditoría y recorridos de navegador antes de publicar `dist/`.
 
-La página esperada es:
+La página publicada y verificada es:
 
 `https://apu242007.github.io/new-check-list-equipos-de-torre/`
 
