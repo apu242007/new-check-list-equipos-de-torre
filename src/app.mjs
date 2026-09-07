@@ -1,5 +1,6 @@
 import {
   STATES,
+  EQUIPMENT_OPTIONS,
   OPERATORS,
   newDraft,
   validateItem,
@@ -62,15 +63,15 @@ function input(label, key, value = '', type = 'text', scope = 'general', wide = 
   const control =
     type === 'textarea'
       ? `<textarea ${attrs} maxlength="6000" rows="2">${escape(value)}</textarea>`
-      : type === 'operator'
-        ? `<select ${attrs}><option value="">Seleccionar operadora</option>${OPERATORS.map((o) => `<option ${o === value ? 'selected' : ''}>${o}</option>`).join('')}</select>`
+      : ['equipment', 'operator'].includes(type)
+        ? `<select ${attrs}><option value="">${type === 'equipment' ? 'Seleccionar equipo' : 'Seleccionar operadora'}</option>${(type === 'equipment' ? EQUIPMENT_OPTIONS : OPERATORS).map((option) => `<option ${option === value ? 'selected' : ''}>${option}</option>`).join('')}</select>`
         : `<input ${attrs} type="${type}" value="${escape(value)}" ${type === 'text' ? 'maxlength="255"' : ''}>`;
   return `<label ${wide ? 'class="wide"' : ''}><span>${label}</span>${control}</label>`;
 }
 function renderGeneral() {
   const fields = [
     ['Fecha de inspección *', 'date', 'date'],
-    ['Equipo / Rig *', 'equipment'],
+    ['Equipo / Rig *', 'equipment', 'equipment'],
     ['Pozo *', 'well'],
     ['Locación', 'location'],
     ['Cliente / Operadora', 'operator', 'operator'],

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0",
+  "site": {
+    "url": "https://tackersrl505.sharepoint.com/sites/WellService"
+  },
+  "lists": [
+    {
+      "title": "INSPECCION DE CAMPO EQ TORRE",
+      "template": "GenericList",
+      "url": "Lists/INSPECCION DE CAMPO EQ TORRE",
+      "fields": [
+        {
+          "internalName": "Operadora",
+          "displayName": "Operadora",
+          "type": "Choice",
+          "required": false,
+          "choices": [
+            "YPF",
+            "PAE",
+            "Pluspetrol",
+            "Vista",
+            "CGC",
+            "Shell Argentina",
+            "Tecpetrol",
+            "CAPSA",
+            "PCR",
+            "TotalEnergies",
+            "Pampa Energía",
+            "Otra"
+          ]
+        }
+      ]
+    }
+  ],
+  "libraries": []
+}

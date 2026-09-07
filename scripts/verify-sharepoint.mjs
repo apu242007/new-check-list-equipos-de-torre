@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { checkColumns } from '../src/schema.mjs';
 const run = promisify(execFile);
@@ -23,6 +23,7 @@ async function get(path) {
       env: {
         ...process.env,
         AZURE_CONFIG_DIR: join(process.env.LOCALAPPDATA, 'CodexSharePointInspection', 'azure'),
+        PYTHONIOENCODING: 'utf-8',
       },
       maxBuffer: 2_000_000,
     },
@@ -35,11 +36,22 @@ async function columns(list) {
     throw Error('El esquema requiere paginación adicional; usar la verificación desde la app.');
   return data.value;
 }
-const [headers, items] = await Promise.all([
+const [headers, items, operator] = await Promise.all([
   columns(config.headerListId),
   columns(config.itemListId),
+  get(
+    `sites/${config.siteId}/lists/${config.headerListId}/columns/f9a233eb-0067-4864-9abc-51422728404e`,
+  ),
 ]);
-checkColumns(headers, items, config);
+const currentHeaders = headers.filter((column) => column.name !== 'Operadora');
+currentHeaders.push(operator);
+checkColumns(currentHeaders, items, config);
+if (process.argv.includes('--update-snapshots')) {
+  await Promise.all([
+    writeFile('docs/sharepoint-columns.json', JSON.stringify({ value: currentHeaders })),
+    writeFile('docs/sharepoint-item-columns.json', JSON.stringify({ value: items })),
+  ]);
+}
 console.log(
   'PASS: columnas, tipos, opciones y vínculo Recorrida verificados mediante GET. No se modificó SharePoint.',
 );

@@ -162,7 +162,7 @@ test('validación completa exige datos generales, revisar todos y cerrar hallazg
   const draft = newDraft(catalog, 'test');
   assert.ok(validateDraft(draft, catalog).length);
   Object.assign(draft.general, {
-    equipment: 'EQ',
+    equipment: 'TKR-01',
     well: 'Pozo',
     date: '2026-09-07',
     inspectors: 'Inspector',

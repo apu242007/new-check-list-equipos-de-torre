@@ -1,5 +1,5 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { parseCatalog } from '../src/domain.mjs';
+import { APP_VERSION, EQUIPMENT_OPTIONS, OPERATORS, parseCatalog } from '../src/domain.mjs';
 const catalog = parseCatalog(await readFile('docs/checklist-fuente.md', 'utf8')).flatMap(
   (s) => s.items,
 );
@@ -77,10 +77,10 @@ const answerSchema = object({
 });
 const generalSchema = object({
   date: { ...str(10, 10), pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
-  equipment: str(255, 1),
+  equipment: { enum: EQUIPMENT_OPTIONS },
   well: str(255, 1),
   location: str(),
-  operator: { enum: ['', 'YPF', 'TotalEnergies', 'Vista', 'PAE', 'Otra'] },
+  operator: { enum: ['', ...OPERATORS] },
   company: str(),
   inspectors: str(255, 1),
   supervisor: str(),
@@ -141,7 +141,7 @@ const headerParams = {
   'item/CompanyRepresentative': `@${g}?['representative']`,
   'item/Notas': "@string(outputs('Metadata_processing'))",
   'item/Cerrada': false,
-  'item/AppVersion': '2.0.0',
+  'item/AppVersion': APP_VERSION,
 };
 const canonical = `parameters('catalog')[sub(${i}?['id'],1)]`;
 const rowParams = {
@@ -305,7 +305,7 @@ const existingActions = {
 const definition = {
   $schema:
     'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#',
-  contentVersion: '2.0.0.0',
+  contentVersion: '2.1.0.0',
   parameters: {
     $connections: { type: 'Object', defaultValue: {} },
     $authentication: { type: 'SecureObject', defaultValue: {} },

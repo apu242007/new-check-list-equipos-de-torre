@@ -52,11 +52,12 @@ export function checkColumns(headers, items, config) {
   for (const [columns, name, choices] of [
     [items, 'Estado', ['SIN_REVISAR', 'OK', 'NO_OK', 'EN_PROC', 'NA']],
     [items, 'EstadoFinal', ['PENDIENTE', 'CERRADO']],
-    [headers, 'Operadora', ['YPF', 'TotalEnergies', 'Vista', 'PAE', 'Otra']],
+    [headers, 'Operadora', OPERATORS],
   ]) {
     const actual = columns.find((c) => c.name === name).choice.choices;
-    if (!choices.every((choice) => actual.includes(choice)))
-      throw Error(`Las opciones de ${name} cambiaron. No se enviaron datos.`);
+    const missing = choices.filter((choice) => !actual.includes(choice));
+    if (missing.length)
+      throw Error(`Las opciones de ${name} cambiaron; faltan: ${missing.join(', ')}.`);
   }
   if (items.find((c) => c.name === 'Recorrida').lookup.listId !== config.headerListId)
     throw Error('El vínculo Recorrida apunta a otra lista. No se enviaron datos.');
@@ -78,3 +79,4 @@ export async function verifySchema(api, config) {
   ]);
   return checkColumns(headers, items, config);
 }
+import { OPERATORS } from './domain.mjs';

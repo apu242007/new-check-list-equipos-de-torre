@@ -38,7 +38,7 @@ function setup() {
   };
   const draft = newDraft(catalog, 'fixed');
   Object.assign(draft.general, {
-    equipment: 'EQ',
+    equipment: 'TKR-01',
     well: 'P',
     date: '2026-09-07',
     inspectors: 'Inspector',

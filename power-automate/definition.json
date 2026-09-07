@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-  "contentVersion": "2.0.0.0",
+  "contentVersion": "2.1.0.0",
   "parameters": {
     "$connections": {
       "type": "Object",
@@ -1457,9 +1457,15 @@
                                   "maxLength": 10
                                 },
                                 "equipment": {
-                                  "type": "string",
-                                  "minLength": 1,
-                                  "maxLength": 255
+                                  "enum": [
+                                    "TKR-01",
+                                    "TKR-05",
+                                    "TKR-06",
+                                    "TKR-07",
+                                    "TKR-08",
+                                    "TKR-10",
+                                    "TKR-11"
+                                  ]
                                 },
                                 "well": {
                                   "type": "string",
@@ -1475,9 +1481,16 @@
                                   "enum": [
                                     "",
                                     "YPF",
-                                    "TotalEnergies",
-                                    "Vista",
                                     "PAE",
+                                    "Pluspetrol",
+                                    "Vista",
+                                    "CGC",
+                                    "Shell Argentina",
+                                    "Tecpetrol",
+                                    "CAPSA",
+                                    "PCR",
+                                    "TotalEnergies",
+                                    "Pampa Energía",
                                     "Otra"
                                   ]
                                 },
@@ -1733,7 +1746,7 @@
                               "item/CompanyRepresentative": "@body('Parse_payload')?['general']?['representative']",
                               "item/Notas": "@string(outputs('Metadata_processing'))",
                               "item/Cerrada": false,
-                              "item/AppVersion": "2.0.0"
+                              "item/AppVersion": "2.1.0"
                             },
                             "authentication": "@parameters('$authentication')",
                             "retryPolicy": {

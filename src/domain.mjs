@@ -1,7 +1,29 @@
 export const STATES = ['OK', 'NO OK', 'EN PROC', 'N/A'];
-export const APP_VERSION = '2.0.0';
+export const APP_VERSION = '2.1.0';
 export const CATALOG_VERSION = 'generico-2026-09-v1';
-export const OPERATORS = ['YPF', 'TotalEnergies', 'Vista', 'PAE', 'Otra'];
+export const EQUIPMENT_OPTIONS = [
+  'TKR-01',
+  'TKR-05',
+  'TKR-06',
+  'TKR-07',
+  'TKR-08',
+  'TKR-10',
+  'TKR-11',
+];
+export const OPERATORS = [
+  'YPF',
+  'PAE',
+  'Pluspetrol',
+  'Vista',
+  'CGC',
+  'Shell Argentina',
+  'Tecpetrol',
+  'CAPSA',
+  'PCR',
+  'TotalEnergies',
+  'Pampa Energía',
+  'Otra',
+];
 const remoteStates = {
   '': 'SIN_REVISAR',
   OK: 'OK',
@@ -110,6 +132,8 @@ export function validateDraft(draft, catalog) {
     if (!text(g[key])) errors.push({ message: `${label}: obligatorio.`, field: key });
   if (!validDate(g.date))
     errors.push({ message: 'Fecha de inspección: obligatoria y válida.', field: 'date' });
+  if (g.equipment && !EQUIPMENT_OPTIONS.includes(g.equipment))
+    errors.push({ message: 'Equipo / Rig: opción no válida.', field: 'equipment' });
   if (g.auditDate && !validDate(g.auditDate))
     errors.push({ message: 'Fecha de auditoría no válida.', field: 'auditDate' });
   if (g.operator && !OPERATORS.includes(g.operator))

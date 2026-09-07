@@ -11,7 +11,7 @@ const endpoint = 'https://test.environment.api.powerplatform.com/submit';
 function draft() {
   const d = newDraft(catalog, crypto.randomUUID());
   Object.assign(d.general, {
-    equipment: 'Prueba',
+    equipment: 'TKR-01',
     well: 'Prueba',
     date: '2026-09-07',
     inspectors: 'Inspector',
