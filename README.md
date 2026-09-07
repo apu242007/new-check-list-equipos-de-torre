@@ -4,7 +4,7 @@ Aplicación web para registrar inspecciones de equipos Workover, Pulling y Rig. 
 
 ## Uso
 
-1. Completar fecha, equipo, pozo y personal que realiza la inspección.
+1. Completar fecha, seleccionar el equipo y la operadora, e indicar el pozo y el personal que realiza la inspección.
 2. Elegir `OK`, `NO OK`, `EN PROC` o `N/A` en cada ítem que se revise.
 3. Para `NO OK` y `EN PROC`, cargar obligatoriamente responsable, plazo, acción correctiva, evidencia y una foto real.
 4. Para cerrar un hallazgo, completar estado final, fecha, evidencia de cierre y verificador.
@@ -13,6 +13,8 @@ Aplicación web para registrar inspecciones de equipos Workover, Pulling y Rig. 
 No se solicita inicio de sesión. Un flujo de Power Automate recibe una estructura limitada, escribe solamente en las dos listas configuradas y usa las conexiones de SharePoint y Outlook del propietario. Las credenciales de Office nunca llegan al navegador ni al repositorio.
 
 El borrador y las fotos se guardan en el navegador. La exportación JSON incluye las fotos y permite trasladar una copia a otro equipo. Cada cambio enviado crea una nueva copia inmutable de la inspección; el comprobante local evita duplicar el mismo envío si se pierde la respuesta.
+
+Los equipos disponibles son `TKR-01`, `TKR-05`, `TKR-06`, `TKR-07`, `TKR-08`, `TKR-10` y `TKR-11`. Las operadoras disponibles son `YPF`, `PAE`, `Pluspetrol`, `Vista`, `CGC`, `Shell Argentina`, `Tecpetrol`, `CAPSA`, `PCR`, `TotalEnergies`, `Pampa Energía` y `Otra`.
 
 ## SharePoint
 
