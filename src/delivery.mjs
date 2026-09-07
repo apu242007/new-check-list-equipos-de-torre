@@ -20,18 +20,11 @@ export async function buildPayload(draft, catalog, getPhoto) {
       id: item.id,
       state: codes[a.state || ''],
       ...Object.fromEntries(
-        [
-          'responsible',
-          'deadline',
-          'action',
-          'evidence',
-          'observation',
-          'closedAt',
-          'closureEvidence',
-          'verifiedBy',
-        ].map((k) => [k, a[k] || '']),
+        ['responsible', 'deadline', 'action', 'evidence', 'observation'].map((k) => [
+          k,
+          a[k] || '',
+        ]),
       ),
-      finalState: a.finalState || 'PENDIENTE',
       photo,
     });
   }

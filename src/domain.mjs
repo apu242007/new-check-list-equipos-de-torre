@@ -107,17 +107,8 @@ export function validateItem(answer = {}) {
       if (!text(answer[key])) errors.push(`${label}: obligatorio para NO OK o EN PROC.`);
   if (text(answer.deadline) && !validDate(answer.deadline))
     errors.push('Plazo de resolución: fecha no válida.');
-  if (answer.finalState && !['PENDIENTE', 'CERRADO'].includes(answer.finalState))
-    errors.push('Estado final no válido.');
-  if (answer.finalState === 'CERRADO') {
-    if (!answer.state) errors.push('Seleccioná el estado antes de cerrar el ítem.');
-    if (!validDate(answer.closedAt)) errors.push('Fecha de cierre: obligatoria y válida.');
-    if (!text(answer.closureEvidence)) errors.push('Evidencia de cierre: obligatoria.');
-    if (!text(answer.verifiedBy)) errors.push('Verificado por: obligatorio.');
-  }
-  for (const key of ['responsible', 'verifiedBy'])
-    if ((answer[key] || '').length > 255) errors.push(`${key}: máximo 255 caracteres.`);
-  for (const key of ['observation', 'action', 'evidence', 'closureEvidence'])
+  if ((answer.responsible || '').length > 255) errors.push('responsible: máximo 255 caracteres.');
+  for (const key of ['observation', 'action', 'evidence'])
     if ((answer[key] || '').length > 6000) errors.push(`${key}: máximo 6000 caracteres.`);
   return errors;
 }
@@ -146,11 +137,6 @@ export function validateDraft(draft, catalog) {
     for (const message of validateItem(answer)) errors.push({ itemId: item.id, message });
     if (draft.closed && !answer.state)
       errors.push({ itemId: item.id, message: 'Revisá el ítem antes de cerrar la inspección.' });
-    if (draft.closed && isFinding(answer) && answer.finalState !== 'CERRADO')
-      errors.push({
-        itemId: item.id,
-        message: 'Completá el cierre del hallazgo antes de cerrar la inspección.',
-      });
   }
   if (draft.closed && !validDate(draft.closedAt))
     errors.push({ message: 'Fecha de cierre de inspección: obligatoria.', field: 'closedAt' });
@@ -197,15 +183,11 @@ export function toItemFields(item, answer, parentId, equipment, draftId) {
     Responsable: answer.responsible || '',
     Plazo: dateValue(answer.deadline),
     AccionCorrectiva: answer.action || '',
-    EstadoFinal: answer.finalState || 'PENDIENTE',
-    FechaVerif: answer.finalState === 'CERRADO' ? dateValue(answer.closedAt) : null,
     Observaciones:
       (answer.observation || '') +
       marker +
       JSON.stringify({
         evidence: answer.evidence || '',
-        closureEvidence: answer.closureEvidence || '',
-        verifiedBy: answer.verifiedBy || '',
         catalogVersion: CATALOG_VERSION,
       }),
     Equipo: equipment,
@@ -233,12 +215,8 @@ export function fromItemFields(fields) {
     responsible: fields.Responsable || '',
     deadline: (fields.Plazo || '').slice(0, 10),
     action: fields.AccionCorrectiva || '',
-    finalState: fields.EstadoFinal || '',
-    closedAt: (fields.FechaVerif || '').slice(0, 10),
     observation,
     evidence: extra.evidence || '',
-    closureEvidence: extra.closureEvidence || '',
-    verifiedBy: extra.verifiedBy || '',
   };
 }
 export function importDraft(raw, catalog, id) {
@@ -263,18 +241,7 @@ export function importDraft(raw, catalog, id) {
     draft.general[key] = source.general[key];
   }
   const allowed = new Set(catalog.flatMap((s) => s.items.map((i) => String(i.id))));
-  const answerKeys = [
-    'state',
-    'responsible',
-    'deadline',
-    'action',
-    'evidence',
-    'observation',
-    'finalState',
-    'closedAt',
-    'closureEvidence',
-    'verifiedBy',
-  ];
+  const answerKeys = ['state', 'responsible', 'deadline', 'action', 'evidence', 'observation'];
   for (const [key, value] of Object.entries(source.answers)) {
     if (!allowed.has(key) || !object(value)) throw Error('Ítem desconocido o inválido.');
     const answer = {};
@@ -299,8 +266,6 @@ export function importDraft(raw, catalog, id) {
         answer[field] = value[field];
       }
     if (answer.state && !STATES.includes(answer.state)) throw Error('Estado importado inválido.');
-    if (answer.finalState && !['PENDIENTE', 'CERRADO'].includes(answer.finalState))
-      throw Error('Estado final importado inválido.');
     draft.answers[key] = answer;
   }
   draft.closed = source.closed === true;

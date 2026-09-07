@@ -91,16 +91,12 @@ test('NO OK muestra y exige todos los campos correctivos; borrar selección no b
     first(page).getByLabel('Evidencia / referencia documental', { exact: true }),
   ).toHaveValue('Acta de inspección 12');
 });
-test('el borrador sobrevive una recarga y el cierre conserva el hallazgo', async ({ page }) => {
+test('el borrador sobrevive una recarga', async ({ page }) => {
   await first(page).getByRole('radio', { name: 'EN PROC', exact: true }).check();
   await first(page).getByLabel('Responsable', { exact: true }).fill('Supervisor');
   await page.reload();
   await expect(first(page).getByRole('radio', { name: 'EN PROC', exact: true })).toBeChecked();
   await expect(first(page).getByLabel('Responsable', { exact: true })).toHaveValue('Supervisor');
-  await first(page).getByLabel('Estado final', { exact: true }).selectOption('CERRADO');
-  await page.getByRole('button', { name: 'Validar registro', exact: true }).click();
-  await expect(page.locator('#errors')).toContainText('Evidencia de cierre: obligatoria');
-  await expect(first(page).getByRole('radio', { name: 'EN PROC', exact: true })).toBeChecked();
 });
 test('búsqueda tolera acentos y navegación revela la sección oculta', async ({ page }) => {
   await page.getByLabel('Buscar ítem').fill('mastil');

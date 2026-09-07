@@ -69,10 +69,6 @@ const answerSchema = object({
   action: str(6000),
   evidence: str(6000),
   observation: str(6000),
-  finalState: { enum: ['PENDIENTE', 'CERRADO'] },
-  closedAt: str(10),
-  closureEvidence: str(6000),
-  verifiedBy: str(),
   photo: { anyOf: [{ type: 'null' }, photoSchema] },
 });
 const generalSchema = object({
@@ -155,8 +151,6 @@ const rowParams = {
   'item/Responsable': `@${i}?['responsible']`,
   'item/Plazo': date(`${i}?['deadline']`),
   'item/AccionCorrectiva': `@${i}?['action']`,
-  'item/EstadoFinal/Value': `@${i}?['finalState']`,
-  'item/FechaVerif': date(`${i}?['closedAt']`),
   'item/Observaciones': "@string(outputs('Item_evidence'))",
   'item/Equipo': `@${g}?['equipment']`,
   'item/FotosCount': 0,
@@ -170,8 +164,6 @@ const saveItems = {
     Item_evidence: action('Compose', {
       observation: `@${i}?['observation']`,
       evidence: `@${i}?['evidence']`,
-      closureEvidence: `@${i}?['closureEvidence']`,
-      verifiedBy: `@${i}?['verifiedBy']`,
       photoId: `@${i}?['photo']?['id']`,
     }),
     Create_detail: sp('PostItem', rowParams, 'Item_evidence'),
@@ -245,7 +237,7 @@ const processingActions = {
 };
 // The response acknowledges acceptance, while subsequent actions persist and notify.
 processingActions.Save_items.runAfter = {};
-const invalid = `@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),or(empty(trim(item()?['responsible'])),empty(item()?['deadline']),empty(trim(item()?['action'])),empty(trim(item()?['evidence'])),empty(item()?['photo']))),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(${onlyHex("item()?['photo']?['id']")})))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(equals(item()?['finalState'],'CERRADO'),or(empty(item()?['closedAt']),empty(trim(item()?['closureEvidence'])),empty(trim(item()?['verifiedBy'])))),and(${p}?['closed'],or(equals(item()?['state'],'SIN_REVISAR'),and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),not(equals(item()?['finalState'],'CERRADO'))))))`;
+const invalid = `@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),or(empty(trim(item()?['responsible'])),empty(item()?['deadline']),empty(trim(item()?['action'])),empty(trim(item()?['evidence'])),empty(item()?['photo']))),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(${onlyHex("item()?['photo']?['id']")})))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(${p}?['closed'],equals(item()?['state'],'SIN_REVISAR')))`;
 const validActions = {
   Metadata_processing: initialMeta,
   Create_header: sp('PostItem', headerParams, 'Metadata_processing'),

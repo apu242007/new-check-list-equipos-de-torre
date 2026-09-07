@@ -21,7 +21,7 @@ Esquema real inspeccionado el 2026-09-07 y operación real de escritura verifica
 | EN PROC       | `EN_PROC`           |
 | N/A           | `NA`                |
 
-`EstadoFinal` usa `PENDIENTE` y `CERRADO`. Cerrar un hallazgo no cambia su estado original.
+`EstadoFinal` (`PENDIENTE`/`CERRADO`) y `FechaVerif` se completan manualmente en SharePoint; la app no los escribe.
 
 ## Cabecera
 
@@ -41,7 +41,6 @@ No se escriben `TotalItems`, `ItemsOK`, `ItemsNoOK`, `ItemsEnProc`, `ItemsNA`, `
 | Estado                    | `Estado`                                   |
 | Responsable y plazo       | `Responsable`, `Plazo`                     |
 | Acción correctiva         | `AccionCorrectiva`                         |
-| Estado y fecha final      | `EstadoFinal`, `FechaVerif`                |
 | Evidencias textuales      | `Observaciones` como JSON                  |
 | Equipo                    | `Equipo`                                   |
 | Relación                  | `RecorridaLookupId`                        |

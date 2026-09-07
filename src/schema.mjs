@@ -24,8 +24,6 @@ const itemTypes = {
   Responsable: 'text',
   Plazo: 'dateTime',
   AccionCorrectiva: 'text',
-  EstadoFinal: 'choice',
-  FechaVerif: 'dateTime',
   Observaciones: 'text',
   Equipo: 'text',
   Recorrida: 'lookup',
@@ -53,7 +51,6 @@ export function checkColumns(headers, items, config) {
   }
   for (const [columns, name, choices] of [
     [items, 'Estado', ['SIN_REVISAR', 'OK', 'NO_OK', 'EN_PROC', 'NA']],
-    [items, 'EstadoFinal', ['PENDIENTE', 'CERRADO']],
     [headers, 'Operadora', OPERATORS],
   ]) {
     const actual = columns.find((c) => c.name === name).choice.choices;

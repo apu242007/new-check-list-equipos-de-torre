@@ -544,14 +544,6 @@ fieldset#editable {
   content: ' *';
   color: #ad202b;
 }
-.closure-fields {
-  grid-column: 1/-1;
-  border-top: 1px dashed #d2dbd4;
-  padding-top: 17px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px;
-}
 .item-error {
   border-left: 3px solid var(--red);
   background: #fffbfb;
@@ -832,13 +824,11 @@ dialog p {
 }
 @media (max-width: 420px) {
   .form-grid,
-  .fields,
-  .closure-fields {
+  .fields {
     grid-template-columns: 1fr;
   }
   .form-grid .wide,
-  .fields .wide,
-  .closure-fields {
+  .fields .wide {
     grid-column: auto;
   }
   .document-tag {
@@ -865,6 +855,7 @@ dialog p {
   }
   .topbar {
     background: #182228 !important;
+    -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .topbar button,
@@ -921,6 +912,7 @@ dialog p {
     margin-left: 0;
   }
   .state-option {
+    -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .panel-heading {

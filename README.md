@@ -7,8 +7,9 @@ Aplicación web para registrar inspecciones de equipos Workover, Pulling y Rig. 
 1. Completar fecha, seleccionar el equipo y la operadora, e indicar el pozo y el personal que realiza la inspección.
 2. Elegir `OK`, `NO OK`, `EN PROC` o `N/A` en cada ítem que se revise.
 3. Para `NO OK` y `EN PROC`, cargar obligatoriamente responsable, plazo, acción correctiva, evidencia y una foto real.
-4. Para cerrar un hallazgo, completar estado final, fecha, evidencia de cierre y verificador.
-5. Pulsar **Guardar en SharePoint**. La app confirma el éxito únicamente después de guardar los datos y fotos y enviar el correo a `jcastro@tackertools.com`.
+4. Pulsar **Guardar en SharePoint**. La app confirma el éxito únicamente después de guardar los datos y fotos y enviar el correo a `jcastro@tackertools.com`.
+
+El cierre de un hallazgo (`EstadoFinal`, `FechaVerif`) se completa manualmente en SharePoint; la app no lo gestiona.
 
 No se solicita inicio de sesión. Un flujo de Power Automate recibe una estructura limitada, escribe solamente en las dos listas configuradas y usa las conexiones de SharePoint y Outlook del propietario. Las credenciales de Office nunca llegan al navegador ni al repositorio.
 

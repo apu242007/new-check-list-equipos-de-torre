@@ -1592,27 +1592,6 @@
                                     "minLength": 0,
                                     "maxLength": 6000
                                   },
-                                  "finalState": {
-                                    "enum": [
-                                      "PENDIENTE",
-                                      "CERRADO"
-                                    ]
-                                  },
-                                  "closedAt": {
-                                    "type": "string",
-                                    "minLength": 0,
-                                    "maxLength": 10
-                                  },
-                                  "closureEvidence": {
-                                    "type": "string",
-                                    "minLength": 0,
-                                    "maxLength": 6000
-                                  },
-                                  "verifiedBy": {
-                                    "type": "string",
-                                    "minLength": 0,
-                                    "maxLength": 255
-                                  },
                                   "photo": {
                                     "anyOf": [
                                       {
@@ -1649,10 +1628,6 @@
                                   "action",
                                   "evidence",
                                   "observation",
-                                  "finalState",
-                                  "closedAt",
-                                  "closureEvidence",
-                                  "verifiedBy",
                                   "photo"
                                 ],
                                 "additionalProperties": false
@@ -1683,7 +1658,7 @@
                       "type": "Query",
                       "inputs": {
                         "from": "@body('Parse_payload')?['answers']",
-                        "where": "@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),or(empty(trim(item()?['responsible'])),empty(item()?['deadline']),empty(trim(item()?['action'])),empty(trim(item()?['evidence'])),empty(item()?['photo']))),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(toLower(string(item()?['photo']?['id'])),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'a',''),'b',''),'c',''),'d',''),'e',''),'f',''),'-',''))))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(equals(item()?['finalState'],'CERRADO'),or(empty(item()?['closedAt']),empty(trim(item()?['closureEvidence'])),empty(trim(item()?['verifiedBy'])))),and(body('Parse_payload')?['closed'],or(equals(item()?['state'],'SIN_REVISAR'),and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),not(equals(item()?['finalState'],'CERRADO'))))))"
+                        "where": "@or(and(contains(createArray('NO_OK','EN_PROC'),item()?['state']),or(empty(trim(item()?['responsible'])),empty(item()?['deadline']),empty(trim(item()?['action'])),empty(trim(item()?['evidence'])),empty(item()?['photo']))),and(not(empty(item()?['photo'])),or(not(startsWith(coalesce(item()?['photo']?['contentBase64'],''),'/9j/')),not(empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(toLower(string(item()?['photo']?['id'])),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'a',''),'b',''),'c',''),'d',''),'e',''),'f',''),'-',''))))),not(equals(base64(base64ToBinary(coalesce(item()?['photo']?['contentBase64'],''))),coalesce(item()?['photo']?['contentBase64'],''))),and(body('Parse_payload')?['closed'],equals(item()?['state'],'SIN_REVISAR')))"
                       },
                       "runAfter": {
                         "Parse_payload": [
@@ -1798,8 +1773,6 @@
                                   "inputs": {
                                     "observation": "@items('Save_items')?['observation']",
                                     "evidence": "@items('Save_items')?['evidence']",
-                                    "closureEvidence": "@items('Save_items')?['closureEvidence']",
-                                    "verifiedBy": "@items('Save_items')?['verifiedBy']",
                                     "photoId": "@items('Save_items')?['photo']?['id']"
                                   },
                                   "runAfter": {}
@@ -1824,8 +1797,6 @@
                                       "item/Responsable": "@items('Save_items')?['responsible']",
                                       "item/Plazo": "@if(empty(items('Save_items')?['deadline']),null,concat(items('Save_items')?['deadline'],'T12:00:00Z'))",
                                       "item/AccionCorrectiva": "@items('Save_items')?['action']",
-                                      "item/EstadoFinal/Value": "@items('Save_items')?['finalState']",
-                                      "item/FechaVerif": "@if(empty(items('Save_items')?['closedAt']),null,concat(items('Save_items')?['closedAt'],'T12:00:00Z'))",
                                       "item/Observaciones": "@string(outputs('Item_evidence'))",
                                       "item/Equipo": "@body('Parse_payload')?['general']?['equipment']",
                                       "item/FotosCount": 0

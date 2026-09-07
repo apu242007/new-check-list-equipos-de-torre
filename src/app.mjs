@@ -99,12 +99,10 @@ function itemMarkup(item) {
     );
   return `<article class="item" id="item-${item.id}" data-item-id="${item.id}"><div class="item-top"><span class="item-number">${String(item.id).padStart(3, '0')}</span><h3>${escape(item.text)}</h3></div>
   <div class="state-row" role="group" aria-label="Estado del ítem ${item.id}"><span class="state-caption">ESTADO</span>${STATES.map((state) => `<label class="state-option ${slug(state)}"><input type="radio" name="state-${item.id}" value="${state}" ${a.state === state ? 'checked' : ''}><span>${state}</span></label>`).join('')}<button type="button" class="clear-state">Quitar selección</button></div>
-  <details class="item-details" ${isFinding(a) || a.finalState === 'CERRADO' ? 'open' : ''}><summary>Observación, evidencia y seguimiento</summary><div class="fields">
+  <details class="item-details" ${isFinding(a) ? 'open' : ''}><summary>Observación, evidencia y seguimiento</summary><div class="fields">
     ${field('Observación', 'observation', 'textarea', true)}${field('Evidencia / referencia documental', 'evidence', 'textarea', true)}
     <div class="photo-field wide"><label><span>Foto del ítem</span><input type="file" class="photo-input" accept="image/jpeg,image/png,image/webp" aria-label="Foto del ítem ${item.id}"></label><span class="field-help">Obligatoria para NO OK y EN PROC. Se adjunta al ítem en SharePoint. JPG, PNG o WebP, hasta 15 MB.</span><div class="photo-preview" aria-live="polite"></div><button type="button" class="remove-photo" ${a.photo ? '' : 'hidden'}>Quitar foto</button></div>
     ${field('Responsable', 'responsible', 'text')}${field('Plazo de resolución', 'deadline', 'date')}${field('Acción correctiva propuesta', 'action', 'textarea', true)}
-    <div class="closure-fields"><label><span id="final-label-${item.id}">Estado final</span><select aria-labelledby="final-label-${item.id}" data-answer="finalState" id="item-${item.id}-finalState"><option value="">Sin definir</option><option ${a.finalState === 'PENDIENTE' ? 'selected' : ''}>PENDIENTE</option><option ${a.finalState === 'CERRADO' ? 'selected' : ''}>CERRADO</option></select></label>
-    ${field('Fecha de verificación / cierre', 'closedAt', 'date')}${field('Evidencia de cierre', 'closureEvidence', 'textarea', true)}${field('Verificado por', 'verifiedBy', 'text')}</div>
   </div></details></article>`;
 }
 function render() {
@@ -143,10 +141,8 @@ function updateRequirements(id) {
     a = draft.answers[id] || {};
   for (const key of ['responsible', 'deadline', 'action', 'evidence'])
     item.querySelector(`[data-answer="${key}"]`).required = isFinding(a);
-  for (const key of ['closedAt', 'closureEvidence', 'verifiedBy'])
-    item.querySelector(`[data-answer="${key}"]`).required = a.finalState === 'CERRADO';
   item.querySelector('.photo-input').required = isFinding(a) && !a.photo;
-  if (isFinding(a) || a.finalState === 'CERRADO') item.querySelector('details').open = true;
+  if (isFinding(a)) item.querySelector('details').open = true;
 }
 function showErrors() {
   const errors = validateDraft(draft, catalog);
