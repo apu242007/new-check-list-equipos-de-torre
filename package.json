@@ -10,6 +10,13 @@
     "test:coverage": "node --experimental-test-coverage --test tests",
     "test:e2e": "playwright test"
   },
-  "dependencies": {"@azure/msal-browser": "5.21.0"},
-  "devDependencies": {"esbuild": "0.28.2", "@playwright/test": "1.57.0"}
+  "dependencies": {
+    "@azure/msal-browser": "5.21.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.57.0",
+    "esbuild": "0.28.2",
+    "prettier": "3.9.6"
+  }
 }

@@ -1,0 +1,9 @@
+{
+  "clientId": "",
+  "tenantId": "2003cd32-a447-4e58-b7f9-ada4dc293241",
+  "siteId": "tackersrl505.sharepoint.com,905a139d-0b93-4744-ad7b-b38903199802,4e4cb417-f066-4c63-a553-a47751a15707",
+  "siteUrl": "https://tackersrl505.sharepoint.com/sites/WellService",
+  "headerListId": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+  "itemListId": "e481391a-d38f-4fe7-9675-7130d030a100",
+  "scopes": ["https://graph.microsoft.com/Sites.Selected"]
+}

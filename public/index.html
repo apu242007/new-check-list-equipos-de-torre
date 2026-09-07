@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#182228" />
+    <title>Preauditoría de equipos | Tacker</title>
+    <link rel="icon" href="./logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Ir al checklist</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Tacker, inicio"
+        ><img src="./logo.svg" alt="Tacker Solutions" width="155" height="47" /></a
+      ><span class="division">WELL SERVICE <span>/</span> INSPECCIONES</span
+      ><button id="connect" class="button light">Conectar Microsoft</button>
+    </header>
+    <div class="workspace">
+      <aside class="sidebar" aria-label="Secciones del checklist">
+        <div class="side-label">CONTENIDO DE INSPECCIÓN</div>
+        <nav id="sections"></nav>
+        <div class="side-note">WORKOVER · PULLING · RIG<br />Verificación objetiva en campo</div>
+      </aside>
+      <main id="main" tabindex="-1">
+        <div class="eyebrow">SEGURIDAD Y CONDICIÓN DEL EQUIPO</div>
+        <div class="heading">
+          <div>
+            <h1>Checklist de preauditoría</h1>
+            <p class="intro">
+              Registrá las condiciones del equipo y el seguimiento de cada acción correctiva.
+            </p>
+          </div>
+          <span class="document-tag">GENÉRICO<br /><strong>REV. 01</strong></span>
+        </div>
+        <div class="toolbar" aria-label="Acciones del documento">
+          <button id="new" class="button">Nueva inspección</button
+          ><button id="open" class="button">Abrir de SharePoint</button
+          ><button id="export" class="button">Exportar borrador</button
+          ><label class="button import-label"
+            >Importar copia<input id="import" type="file" accept="application/json,.json" /></label
+          ><button id="print" class="button">Imprimir / PDF</button>
+        </div>
+        <div class="connection-line">
+          <span id="connection">Sin conexión a Microsoft</span
+          ><span id="local-status">Cargando borrador…</span>
+        </div>
+        <p id="notice" role="status" aria-live="polite"></p>
+        <section id="errors" class="errors" role="alert" tabindex="-1" hidden></section>
+        <form id="inspection" novalidate>
+          <fieldset id="editable">
+            <section id="general" class="panel">
+              <div class="panel-heading">
+                <span class="section-no">00</span>
+                <div>
+                  <h2>Datos generales</h2>
+                  <p>Identificá el equipo, el lugar y las personas que realizan la inspección.</p>
+                </div>
+              </div>
+              <div id="general-fields" class="form-grid"></div>
+            </section>
+            <div class="checklist-tools">
+              <div>
+                <h2>Verificación en campo</h2>
+                <p>
+                  Seleccioná un único estado por ítem. Ningún ítem se considera aprobado de forma
+                  automática.
+                </p>
+              </div>
+              <label class="search-label"
+                >Buscar ítem<input
+                  id="search"
+                  type="search"
+                  placeholder="Ej.: mástil, manguera, escalera…"
+              /></label>
+            </div>
+            <div class="legend">
+              <span><b class="ok">OK</b> Cumple</span
+              ><span><b class="no-ok">NO OK</b> Requiere corrección</span
+              ><span><b class="en-proc">EN PROC</b> Corrección en curso</span
+              ><span><b class="na">N/A</b> No aplica</span>
+            </div>
+            <p id="no-results" hidden>No se encontraron ítems con ese texto.</p>
+            <div id="checklist"></div>
+            <section id="closure" class="panel">
+              <div class="panel-heading">
+                <span class="section-no">CI</span>
+                <div>
+                  <h2>Cierre de la inspección</h2>
+                  <p>
+                    Para cerrar, todos los ítems deben estar revisados y los hallazgos deben tener
+                    su cierre documentado.
+                  </p>
+                </div>
+              </div>
+              <div class="form-grid">
+                <label class="checkbox-label"
+                  ><input type="checkbox" id="closed" /> Declarar inspección cerrada</label
+                ><label>Fecha de cierre de inspección<input id="closedAt" type="date" /></label>
+              </div>
+            </section>
+          </fieldset>
+        </form>
+        <footer class="savebar">
+          <div>
+            <strong id="document-state">Borrador de inspección</strong>
+            <p id="save-hint">Los cambios se guardan en este navegador.</p>
+          </div>
+          <div class="save-actions">
+            <button id="validate" class="button">Validar registro</button
+            ><button id="save" class="button primary">
+              Guardar en SharePoint <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </footer>
+        <p class="footer-note">
+          Las condiciones de aceptación deben verificarse contra la documentación técnica y los
+          requisitos aplicables.
+        </p>
+      </main>
+    </div>
+    <dialog id="open-dialog">
+      <div class="dialog-head">
+        <h2>Abrir inspección</h2>
+        <button id="close-dialog" class="button">Cerrar</button>
+      </div>
+      <p>Inspecciones creadas con esta versión del checklist genérico.</p>
+      <div id="remote-list"></div>
+    </dialog>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

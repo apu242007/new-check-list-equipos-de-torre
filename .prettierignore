@@ -1,0 +1,7 @@
+node_modules
+dist
+test-results
+public/logo.svg
+docs/checklist-fuente.md
+docs/sharepoint-columns.json
+docs/sharepoint-item-columns.json
