@@ -6,8 +6,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "node scripts/serve.mjs",
-    "test": "node --test \"tests/*.test.mjs\"",
-    "test:coverage": "node --experimental-test-coverage --test \"tests/*.test.mjs\"",
+    "test": "node --test tests/delivery.test.mjs tests/domain.test.mjs tests/photos.test.mjs tests/schema.test.mjs tests/sharepoint.test.mjs",
+    "test:coverage": "node --experimental-test-coverage --test tests/delivery.test.mjs tests/domain.test.mjs tests/photos.test.mjs tests/schema.test.mjs tests/sharepoint.test.mjs",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
