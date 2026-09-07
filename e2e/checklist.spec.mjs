@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 const first = (page) => page.locator('#item-1');
 async function general(page) {
   await page.getByLabel('Fecha de inspección *', { exact: true }).fill('2026-09-07');
-  await page.getByLabel('Equipo / Rig *', { exact: true }).selectOption('TKR-01');
+  await page.getByRole('combobox', { name: 'Equipo / Rig *', exact: true }).selectOption('TKR-01');
   await page.getByLabel('Pozo *', { exact: true }).fill('POZO-PRUEBA');
   await page
     .getByLabel('Personal que realiza la inspección *', { exact: true })
@@ -31,8 +31,8 @@ test('inicio sin estados seleccionados, cuatro opciones y sin desborde horizonta
   });
 });
 test('equipos y operadoras se eligen desde listas controladas', async ({ page }) => {
-  const equipment = page.getByLabel('Equipo / Rig *', { exact: true });
-  const operator = page.getByLabel('Cliente / Operadora', { exact: true });
+  const equipment = page.getByRole('combobox', { name: 'Equipo / Rig *', exact: true });
+  const operator = page.getByRole('combobox', { name: 'Cliente / Operadora', exact: true });
   await expect(equipment).toHaveRole('combobox');
   await expect(equipment.locator('option')).toHaveCount(8);
   await equipment.selectOption('TKR-11');

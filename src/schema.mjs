@@ -1,3 +1,5 @@
+import { OPERATORS } from './domain.mjs';
+
 const headerTypes = {
   Title: 'text',
   Equipo: 'text',
@@ -79,4 +81,3 @@ export async function verifySchema(api, config) {
   ]);
   return checkColumns(headers, items, config);
 }
-import { OPERATORS } from './domain.mjs';
