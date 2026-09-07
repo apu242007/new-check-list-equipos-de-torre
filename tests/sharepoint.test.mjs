@@ -60,3 +60,17 @@ test('cliente pagina lecturas y detecta títulos duplicados',async()=>{
   const api=new GraphClient(config,async()=> 'test',async()=>new Response(JSON.stringify(++call===1?{value:[], '@odata.nextLink':'https://graph.microsoft.com/v1.0/next'}:{value:[{id:'1'},{id:'2'}]})));
   await assert.rejects(api.find('items','key'),/duplicados/);
 });
+test('respuesta perdida de PATCH se reconcilia sin sobrescribir cambios ajenos',async()=>{
+  const {api,draft,rows}=setup();await saveInspection(api,config,draft,catalog,()=>{});
+  draft.answers[1].state='N/A';const update=api.update;
+  api.update=async(...args)=>{await update(...args);throw Error('Respuesta PATCH perdida');};
+  await assert.rejects(saveInspection(api,config,draft,catalog,()=>{}),/PATCH perdida/);
+  api.update=async()=>{throw Error('No debe repetir un PATCH confirmado por lectura');};
+  await saveInspection(api,config,draft,catalog,()=>{});
+  assert.equal(rows.items[0].fields.Estado,'NA');
+});
+test('no usa una versión nueva para sobrescribir un registro sin ETag local',async()=>{
+  const {api,draft}=setup();await saveInspection(api,config,draft,catalog,()=>{});
+  draft.remote.items[1].etag=null;draft.answers[1].state='N/A';
+  await assert.rejects(saveInspection(api,config,draft,catalog,()=>{}),/versión/);
+});
