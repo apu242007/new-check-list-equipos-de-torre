@@ -5,7 +5,7 @@ La instrucción posterior del usuario reemplaza las opciones de estado del docum
 
 ## Registro por ítem
 
-- Estado: `OK`, `NO OK`, `EN PROC`, `N/A`. Sin selección inicial ni cumplimiento automático.
+- Estado: `OK`, `NO OK`, `EN PROC`, `N/A`. Todo ítem arranca en `OK`; el operador solo cambia los que no cumplan, en vez de seleccionar los 248 uno por uno. "Quitar selección" deja el ítem sin estado (bloquea el cierre de la inspección hasta revisarlo).
 - `OK`: cumple con la condición requerida.
 - `NO OK`: no cumple y requiere acción correctiva.
 - `EN PROC`: la corrección está en curso.

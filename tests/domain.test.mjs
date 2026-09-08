@@ -31,9 +31,12 @@ test('catálogo conserva exclusivamente cada verificación de las secciones 1 a 
     catalog.flatMap((s) => s.items).length,
   );
 });
-test('cuatro estados exactos y ninguna respuesta predeterminada', () => {
+test('cuatro estados exactos y todo el catálogo arranca en OK', () => {
   assert.deepEqual(STATES, ['OK', 'NO OK', 'EN PROC', 'N/A']);
-  assert.deepEqual(newDraft(catalog, 'test').answers, {});
+  const answers = newDraft(catalog, 'test').answers;
+  const allItems = catalog.flatMap((s) => s.items);
+  assert.equal(Object.keys(answers).length, allItems.length);
+  for (const item of allItems) assert.deepEqual(answers[item.id], { state: 'OK' });
 });
 test('equipos y operadoras usan las opciones aprobadas', () => {
   assert.deepEqual(EQUIPMENT_OPTIONS, [
@@ -131,7 +134,7 @@ test('importación rechaza datos extraños y restaura solo borrador sin identifi
   ])
     assert.throws(() => importDraft(raw, catalog, 'copy'));
 });
-test('validación completa exige datos generales y revisar todos los ítems', () => {
+test('validación completa exige datos generales y ningún ítem sin selección al cerrar', () => {
   const draft = newDraft(catalog, 'test');
   assert.ok(validateDraft(draft, catalog).length);
   Object.assign(draft.general, {
@@ -141,10 +144,12 @@ test('validación completa exige datos generales y revisar todos los ítems', ()
     inspectors: 'Inspector',
   });
   assert.deepEqual(validateDraft(draft, catalog), []);
+  const firstId = catalog[0].items[0].id;
+  draft.answers[firstId].state = '';
   draft.closed = true;
-  assert.ok(validateDraft(draft, catalog).length);
-  for (const item of catalog.flatMap((s) => s.items)) draft.answers[item.id] = { state: 'OK' };
   draft.closedAt = '2026-09-07';
+  assert.ok(validateDraft(draft, catalog).length);
+  draft.answers[firstId].state = 'OK';
   assert.deepEqual(validateDraft(draft, catalog), []);
 });
 test('rechaza fechas, opciones y tamaños incompatibles con las listas', () => {

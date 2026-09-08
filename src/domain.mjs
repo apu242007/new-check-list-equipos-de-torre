@@ -77,7 +77,9 @@ export function newDraft(catalog, id) {
       representative: '',
       notes: '',
     },
-    answers: {},
+    answers: Object.fromEntries(
+      catalog.flatMap((s) => s.items).map((item) => [item.id, { state: 'OK' }]),
+    ),
     closed: false,
     closedAt: '',
     remote: { items: {} },

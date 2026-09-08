@@ -19,10 +19,10 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.check-section')).toHaveCount(16);
 });
-test('inicio sin estados seleccionados, cuatro opciones y sin desborde horizontal', async ({
+test('arranca con todos los ítems en OK, cuatro opciones y sin desborde horizontal', async ({
   page,
 }) => {
-  await expect(page.locator('input[type=radio]:checked')).toHaveCount(0);
+  await expect(first(page).getByRole('radio', { name: 'OK', exact: true })).toBeChecked();
   await expect(first(page).getByRole('radio')).toHaveCount(4);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({
@@ -133,6 +133,7 @@ test('almacenamiento lleno muestra error y permite exportar', async ({ page }) =
 });
 test('cierre completo no admite ítems sin revisar', async ({ page }) => {
   await general(page);
+  await first(page).getByRole('button', { name: 'Quitar selección' }).click();
   await page.getByLabel('Declarar inspección cerrada').check();
   await page.getByLabel('Fecha de cierre de inspección', { exact: true }).fill('2026-09-07');
   await page.getByRole('button', { name: 'Validar registro', exact: true }).click();

@@ -5,7 +5,7 @@ Aplicación web para registrar inspecciones de equipos Workover, Pulling y Rig. 
 ## Uso
 
 1. Completar fecha, seleccionar el equipo y la operadora, e indicar el pozo y el personal que realiza la inspección.
-2. Elegir `OK`, `NO OK`, `EN PROC` o `N/A` en cada ítem que se revise.
+2. Todo ítem arranca en `OK`; cambiar a `NO OK`, `EN PROC` o `N/A` solo los que correspondan. "Quitar selección" deja el ítem sin estado.
 3. Para `NO OK` y `EN PROC`, cargar obligatoriamente una foto real; la observación es opcional y breve.
 4. Pulsar **Guardar en SharePoint**. La app arma un PDF con las 16 secciones (datos generales, estados, observaciones y miniaturas de las fotos) y lo adjunta a la cabecera junto con las fotos originales por ítem. Confirma el éxito únicamente después de guardar los datos, fotos y PDF, y de enviar el correo a `jcastro@tackertools.com`.
 
