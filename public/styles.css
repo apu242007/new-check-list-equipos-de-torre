@@ -601,6 +601,16 @@ fieldset#editable {
   box-shadow: 0 -4px 18px #253d3010;
   z-index: 2;
 }
+.savebar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 16px;
+  background: linear-gradient(to bottom, transparent, #fff);
+  pointer-events: none;
+}
 .savebar strong {
   font-size: 12px;
 }
@@ -840,6 +850,14 @@ dialog p {
   .state-option {
     padding: 8px;
   }
+  .photo-input {
+    font-size: 11px;
+    padding: 10px 8px;
+  }
+  .photo-input::file-selector-button {
+    padding: 5px 8px;
+    margin-right: 6px;
+  }
   .state-row {
     gap: 5px;
   }
@@ -946,6 +964,21 @@ dialog p {
 .photo-field {
   display: grid;
   gap: 10px;
+}
+.photo-input::file-selector-button {
+  border: 1px solid #ccd3d0;
+  border-radius: 6px;
+  background: white;
+  color: #26363b;
+  padding: 8px 12px;
+  font: inherit;
+  font-weight: 700;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.photo-input::file-selector-button:hover {
+  background: #eef1ef;
+  border-color: #9ba9a3;
 }
 .photo-preview img {
   width: 100%;
