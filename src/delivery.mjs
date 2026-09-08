@@ -1,5 +1,5 @@
 import { validateDraft, newDraft } from './domain.mjs';
-import { buildReport as defaultBuildReport } from './report.mjs';
+import { buildReport as defaultBuildReport, summarize } from './report.mjs';
 const codes = { OK: 'OK', 'NO OK': 'NO_OK', 'EN PROC': 'EN_PROC', 'N/A': 'NA', '': 'SIN_REVISAR' };
 export async function buildPayload(draft, catalog, getPhoto, buildReport = defaultBuildReport) {
   const errors = validateDraft(draft, catalog);
@@ -24,16 +24,7 @@ export async function buildPayload(draft, catalog, getPhoto, buildReport = defau
       photo,
     });
   }
-  const summary = { ok: 0, noOk: 0, enProc: 0, na: 0, sinRevisar: 0, hallazgos: 0 };
-  for (const a of answers) {
-    if (a.state === 'OK') summary.ok++;
-    else if (a.state === 'NO_OK') summary.noOk++;
-    else if (a.state === 'EN_PROC') summary.enProc++;
-    else if (a.state === 'NA') summary.na++;
-    else summary.sinRevisar++;
-  }
-  summary.hallazgos = summary.noOk + summary.enProc;
-  summary.total = answers.length;
+  const summary = summarize(draft, catalog);
   const report = await buildReport(draft, catalog, getPhoto);
   const payload = {
     draftId: draft.id,
