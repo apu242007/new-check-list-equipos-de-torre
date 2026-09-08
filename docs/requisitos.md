@@ -19,6 +19,7 @@ La instrucción posterior del usuario reemplaza las opciones de estado del docum
 Sin estadísticas, dashboard, gráficos, porcentajes, indicadores ni resúmenes.
 Conservar los datos generales y las 16 secciones técnicas del documento fuente.
 No inventar criterios técnicos ni valores de aceptación.
+Al guardar, generar un PDF con datos generales, las 16 secciones y sus ítems (estado, observación y miniatura de foto si existe) y adjuntarlo a la cabecera en SharePoint.
 
 ## Integración validada
 

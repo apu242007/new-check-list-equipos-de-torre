@@ -1616,6 +1616,26 @@
                               "type": "string",
                               "minLength": 0,
                               "maxLength": 10
+                            },
+                            "report": {
+                              "type": "object",
+                              "properties": {
+                                "contentBase64": {
+                                  "type": "string",
+                                  "minLength": 100,
+                                  "maxLength": 20000000
+                                },
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 150
+                                }
+                              },
+                              "required": [
+                                "contentBase64",
+                                "filename"
+                              ],
+                              "additionalProperties": false
                             }
                           },
                           "required": [
@@ -1623,7 +1643,8 @@
                             "general",
                             "answers",
                             "closed",
-                            "closedAt"
+                            "closedAt",
+                            "report"
                           ],
                           "additionalProperties": false
                         }
@@ -1848,6 +1869,32 @@
                                 }
                               }
                             },
+                            "Attach_report": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "CreateAttachment"
+                                },
+                                "parameters": {
+                                  "dataset": "https://tackersrl505.sharepoint.com/sites/WellService",
+                                  "table": "e428ab0c-7c28-4f15-95e0-1ab8d3439cff",
+                                  "itemId": "@outputs('Create_header')?['body/ID']",
+                                  "displayName": "@body('Parse_payload')?['report']?['filename']",
+                                  "body": "@base64ToBinary(body('Parse_payload')?['report']?['contentBase64'])"
+                                },
+                                "authentication": "@parameters('$authentication')",
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {
+                                "Save_items": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
                             "Metadata_sending": {
                               "type": "Compose",
                               "inputs": {
@@ -1862,7 +1909,7 @@
                                 "notes": "@body('Parse_payload')?['general']?['notes']"
                               },
                               "runAfter": {
-                                "Save_items": [
+                                "Attach_report": [
                                   "Succeeded"
                                 ]
                               }
@@ -1905,7 +1952,7 @@
                                 "parameters": {
                                   "emailMessage/To": "jcastro@tackertools.com",
                                   "emailMessage/Subject": "@concat('Preauditoría recibida - ',body('Parse_payload')?['general']?['equipment'],' - ',body('Parse_envelope')?['submissionId'])",
-                                  "emailMessage/Body": "@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['equipment']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Pozo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['well']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Inspección: ',replace(replace(replace(string(body('Parse_payload')?['draftId']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</p><p>Los ítems y sus evidencias fotográficas fueron guardados en SharePoint.</p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(outputs('Create_header')?['body/ID']),'\">Abrir inspección</a></p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(outputs('Create_header')?['body/ID']),'&amp;FilterLookupId1=1\">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')",
+                                  "emailMessage/Body": "@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['equipment']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Pozo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['well']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Inspección: ',replace(replace(replace(string(body('Parse_payload')?['draftId']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</p><p>Los ítems, sus evidencias fotográficas y el PDF de la inspección fueron guardados en SharePoint.</p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(outputs('Create_header')?['body/ID']),'\">Abrir inspección</a></p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(outputs('Create_header')?['body/ID']),'&amp;FilterLookupId1=1\">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')",
                                   "emailMessage/Importance": "Normal"
                                 },
                                 "authentication": "@parameters('$authentication')",

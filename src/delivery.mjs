@@ -1,6 +1,7 @@
 import { validateDraft, newDraft } from './domain.mjs';
+import { buildReport as defaultBuildReport } from './report.mjs';
 const codes = { OK: 'OK', 'NO OK': 'NO_OK', 'EN PROC': 'EN_PROC', 'N/A': 'NA', '': 'SIN_REVISAR' };
-export async function buildPayload(draft, catalog, getPhoto) {
+export async function buildPayload(draft, catalog, getPhoto, buildReport = defaultBuildReport) {
   const errors = validateDraft(draft, catalog);
   if (errors.length) throw Error(errors.map((e) => e.message).join('\n'));
   const general = Object.fromEntries(
@@ -23,12 +24,14 @@ export async function buildPayload(draft, catalog, getPhoto) {
       photo,
     });
   }
+  const report = await buildReport(draft, catalog, getPhoto);
   const payload = {
     draftId: draft.id,
     general,
     answers,
     closed: !!draft.closed,
     closedAt: draft.closedAt || '',
+    report,
   };
   if (JSON.stringify(payload).length > 35000000)
     throw Error('Las fotos superan 35 MB por envío. Usá imágenes más pequeñas.');
@@ -40,6 +43,7 @@ export async function sendInspection(
   catalog,
   {
     getPhoto,
+    buildReport = defaultBuildReport,
     checkpoint = () => {},
     onStatus = () => {},
     fetcher = fetch,
@@ -48,7 +52,7 @@ export async function sendInspection(
 ) {
   if (!config.submissionUrl?.startsWith('https://'))
     throw Error('El servicio de recepción todavía no está configurado. Conservá el borrador.');
-  const payload = await buildPayload(draft, catalog, getPhoto);
+  const payload = await buildPayload(draft, catalog, getPhoto, buildReport);
   const fingerprint = Array.from(
     new Uint8Array(
       await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(payload))),

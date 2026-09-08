@@ -27,6 +27,8 @@ Esquema real inspeccionado el 2026-09-07 y operación real de escritura verifica
 
 Se escriben `Title`, `Equipo`, `Operadora`, `Contrato`, `FechaRelevamiento`, `Pozo`, `AuditoriaProgramada`, `EquipoRecorrida`, `CompanyRepresentative`, `Notas`, `Cerrada`, `FechaCierre` y `AppVersion`. Locación, empresa, supervisor, estado de procesamiento y clave privada del comprobante se conservan como JSON en `Notas`.
 
+La app genera un PDF de la inspección completa (datos generales, las 16 secciones y sus 248 ítems, con miniatura de cada foto) y lo adjunta a la cabecera (`preauditoria-{draftId}.pdf`), además de las fotos que ya se adjuntan por ítem.
+
 No se escriben `TotalItems`, `ItemsOK`, `ItemsNoOK`, `ItemsEnProc`, `ItemsNA`, `ItemsSinRevisar`, `PctAvance`, `Semaforo` ni campos de reiteración.
 
 `Equipo` se guarda como texto en SharePoint, pero la app solo admite `TKR-01`, `TKR-05`, `TKR-06`, `TKR-07`, `TKR-08`, `TKR-10` o `TKR-11`. `Operadora` es una columna de opciones con `YPF`, `PAE`, `Pluspetrol`, `Vista`, `CGC`, `Shell Argentina`, `Tecpetrol`, `CAPSA`, `PCR`, `TotalEnergies`, `Pampa Energía` y `Otra`.

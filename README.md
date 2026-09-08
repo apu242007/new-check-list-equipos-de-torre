@@ -7,7 +7,7 @@ Aplicación web para registrar inspecciones de equipos Workover, Pulling y Rig. 
 1. Completar fecha, seleccionar el equipo y la operadora, e indicar el pozo y el personal que realiza la inspección.
 2. Elegir `OK`, `NO OK`, `EN PROC` o `N/A` en cada ítem que se revise.
 3. Para `NO OK` y `EN PROC`, cargar obligatoriamente una foto real; la observación es opcional y breve.
-4. Pulsar **Guardar en SharePoint**. La app confirma el éxito únicamente después de guardar los datos y fotos y enviar el correo a `jcastro@tackertools.com`.
+4. Pulsar **Guardar en SharePoint**. La app arma un PDF con las 16 secciones (datos generales, estados, observaciones y miniaturas de las fotos) y lo adjunta a la cabecera junto con las fotos originales por ítem. Confirma el éxito únicamente después de guardar los datos, fotos y PDF, y de enviar el correo a `jcastro@tackertools.com`.
 
 El seguimiento del hallazgo (responsable, plazo, acción correctiva) y su cierre (`EstadoFinal`, `FechaVerif`) se completan manualmente en SharePoint; la app no los gestiona.
 
@@ -24,6 +24,7 @@ Los equipos disponibles son `TKR-01`, `TKR-05`, `TKR-06`, `TKR-07`, `TKR-08`, `T
 - Detalle: **INSPECCION DE CAMPO EQ TORRE - ITEMS**
 - Relación: `RecorridaLookupId` → ID de cabecera
 - Fotos: adjuntos del ítem de detalle
+- PDF de la inspección: adjunto de la cabecera
 
 El [contrato de datos](docs/sharepoint-contract.md) registra los nombres internos y opciones observados. El flujo no usa los campos estadísticos existentes.
 

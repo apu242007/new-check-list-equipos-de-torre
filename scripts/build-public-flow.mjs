@@ -81,12 +81,17 @@ const generalSchema = object({
   representative: str(),
   notes: str(6000),
 });
+const reportSchema = object({
+  contentBase64: str(20000000, 100),
+  filename: str(150, 1),
+});
 const payloadSchema = object({
   draftId: uuid,
   general: generalSchema,
   answers: { type: 'array', minItems: 1, maxItems: catalog.length, items: answerSchema },
   closed: { type: 'boolean' },
   closedAt: str(10),
+  report: reportSchema,
 });
 const envelopeSchema = object(
   {
@@ -186,10 +191,20 @@ const saveItems = {
 };
 const htmlEscape = (value) =>
   `replace(replace(replace(string(${value}),'&','&amp;'),'<','&lt;'),'>','&gt;')`;
-const emailBody = `@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',${htmlEscape(`${g}?['equipment']`)},'<br>Pozo: ',${htmlEscape(`${g}?['well']`)},'<br>Inspección: ',${htmlEscape(`${p}?['draftId']`)},'</p><p>Los ítems y sus evidencias fotográficas fueron guardados en SharePoint.</p><p><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(${headerID}),'">Abrir inspección</a></p><p><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(${headerID}),'&amp;FilterLookupId1=1">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')`;
+const emailBody = `@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',${htmlEscape(`${g}?['equipment']`)},'<br>Pozo: ',${htmlEscape(`${g}?['well']`)},'<br>Inspección: ',${htmlEscape(`${p}?['draftId']`)},'</p><p>Los ítems, sus evidencias fotográficas y el PDF de la inspección fueron guardados en SharePoint.</p><p><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(${headerID}),'">Abrir inspección</a></p><p><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(${headerID}),'&amp;FilterLookupId1=1">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')`;
 const processingActions = {
   Save_items: saveItems,
-  Metadata_sending: action('Compose', metadata('processing', 'sending'), 'Save_items'),
+  Attach_report: sp(
+    'CreateAttachment',
+    {
+      table: headers,
+      itemId: `@${headerID}`,
+      displayName: `@${p}?['report']?['filename']`,
+      body: `@base64ToBinary(${p}?['report']?['contentBase64'])`,
+    },
+    'Save_items',
+  ),
+  Metadata_sending: action('Compose', metadata('processing', 'sending'), 'Attach_report'),
   Save_before_email: sp(
     'PatchItem',
     {

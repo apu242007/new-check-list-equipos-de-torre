@@ -26,6 +26,24 @@ test('payload permite solamente campos del checklist y traduce estados', async (
   assert.equal(p.answers[0].state, 'NA');
   assert.ok(!('recipient' in p.general));
   assert.ok(!('remote' in p));
+  assert.equal(p.report.filename, `preauditoria-${d.id}.pdf`);
+  assert.ok(p.report.contentBase64.length > 0);
+});
+test('buildPayload delega la generación del PDF y lo agrega al payload', async () => {
+  const d = draft();
+  const calls = [];
+  const stubReport = { contentBase64: 'stub-bytes', filename: 'stub.pdf' };
+  const buildReport = async (draft, catalog, getPhoto) => {
+    calls.push({ draft, catalog, getPhoto });
+    return stubReport;
+  };
+  const getPhoto = async () => null;
+  const p = await buildPayload(d, catalog, getPhoto, buildReport);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].draft, d);
+  assert.equal(calls[0].catalog, catalog);
+  assert.equal(calls[0].getPhoto, getPhoto);
+  assert.deepEqual(p.report, stubReport);
 });
 test('la foto se carga desde el almacenamiento real, no desde el nombre declarado', async () => {
   const d = draft();
