@@ -45,6 +45,49 @@ test('buildPayload delega la generación del PDF y lo agrega al payload', async 
   assert.equal(calls[0].getPhoto, getPhoto);
   assert.deepEqual(p.report, stubReport);
 });
+test('payload incluye un resumen de resultados por estado', async () => {
+  const summaryCatalog = [
+    {
+      id: 1,
+      title: 'Accesos',
+      items: [
+        { id: 1, text: 'A', section: 'Accesos' },
+        { id: 2, text: 'B', section: 'Accesos' },
+        { id: 3, text: 'C', section: 'Accesos' },
+        { id: 4, text: 'D', section: 'Accesos' },
+        { id: 5, text: 'E', section: 'Accesos' },
+      ],
+    },
+  ];
+  const d = newDraft(summaryCatalog, crypto.randomUUID());
+  Object.assign(d.general, {
+    equipment: 'TKR-01',
+    well: 'Prueba',
+    date: '2026-09-07',
+    inspectors: 'Inspector',
+  });
+  const photo = { id: 'f', name: 'foto.jpg', mime: 'image/jpeg', size: 300 };
+  d.answers[1] = { state: 'OK' };
+  d.answers[2] = { state: 'OK' };
+  d.answers[3] = { state: 'NO OK', photo };
+  d.answers[4] = { state: 'EN PROC', photo };
+  d.answers[5] = { state: 'N/A' };
+  const p = await buildPayload(
+    d,
+    summaryCatalog,
+    async () => ({ contentBase64: '/9j/xx', id: 'f' }),
+    async () => ({ contentBase64: 'stub', filename: 'stub.pdf' }),
+  );
+  assert.deepEqual(p.summary, {
+    ok: 2,
+    noOk: 1,
+    enProc: 1,
+    na: 1,
+    sinRevisar: 0,
+    hallazgos: 2,
+    total: 5,
+  });
+});
 test('la foto se carga desde el almacenamiento real, no desde el nombre declarado', async () => {
   const d = draft();
   d.answers[1] = {

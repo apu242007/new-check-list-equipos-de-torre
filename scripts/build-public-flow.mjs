@@ -85,6 +85,16 @@ const reportSchema = object({
   contentBase64: str(20000000, 100),
   filename: str(150, 1),
 });
+const count = { type: 'integer', minimum: 0, maximum: catalog.length };
+const summarySchema = object({
+  ok: count,
+  noOk: count,
+  enProc: count,
+  na: count,
+  sinRevisar: count,
+  hallazgos: count,
+  total: count,
+});
 const payloadSchema = object({
   draftId: uuid,
   general: generalSchema,
@@ -92,6 +102,7 @@ const payloadSchema = object({
   closed: { type: 'boolean' },
   closedAt: str(10),
   report: reportSchema,
+  summary: summarySchema,
 });
 const envelopeSchema = object(
   {
@@ -191,7 +202,80 @@ const saveItems = {
 };
 const htmlEscape = (value) =>
   `replace(replace(replace(string(${value}),'&','&amp;'),'<','&lt;'),'>','&gt;')`;
-const emailBody = `@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',${htmlEscape(`${g}?['equipment']`)},'<br>Pozo: ',${htmlEscape(`${g}?['well']`)},'<br>Inspección: ',${htmlEscape(`${p}?['draftId']`)},'</p><p>Los ítems, sus evidencias fotográficas y el PDF de la inspección fueron guardados en SharePoint.</p><p><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(${headerID}),'">Abrir inspección</a></p><p><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(${headerID}),'&amp;FilterLookupId1=1">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')`;
+const s = `${p}?['summary']`;
+const lit = (str) => `'${str}'`;
+const num = (expr) => `string(${expr})`;
+const hallazgosRow = `if(greater(${s}?['hallazgos'],0),concat(${lit('<tr><td colspan="4" style="padding:16px 6px 0;font-size:13px;font-weight:600;color:#8e1c27">⚠ ')},${num(`${s}?['hallazgos']`)},${lit(' ítem(s) requieren seguimiento (NO OK / EN PROC).</td></tr>')}),${lit('<tr><td colspan="4" style="padding:16px 6px 0;font-size:13px;font-weight:600;color:#166b2f">Sin hallazgos pendientes de seguimiento.</td></tr>')})`;
+const emailParts = [
+  lit(
+    '<div style="font-family:Segoe UI,Arial,sans-serif;max-width:640px;margin:0 auto">' +
+      '<div style="background:#182228;padding:22px 26px;border-radius:8px 8px 0 0">' +
+      '<span style="color:#fff;font-size:20px;font-weight:700">Preauditoría recibida</span>' +
+      '</div>' +
+      '<div style="border:1px solid #d9dfdb;border-top:none;padding:26px;border-radius:0 0 8px 8px">' +
+      '<table style="width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13px">' +
+      '<tr><td style="color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap">Equipo</td><td style="font-weight:600">',
+  ),
+  htmlEscape(`${g}?['equipment']`),
+  lit(
+    '</td></tr>' +
+      '<tr><td style="color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap">Pozo</td><td style="font-weight:600">',
+  ),
+  htmlEscape(`${g}?['well']`),
+  lit(
+    '</td></tr>' +
+      '<tr><td style="color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap">Fecha</td><td style="font-weight:600">',
+  ),
+  htmlEscape(`${g}?['date']`),
+  lit(
+    '</td></tr>' +
+      '<tr><td style="color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap">Personal</td><td style="font-weight:600">',
+  ),
+  htmlEscape(`${g}?['inspectors']`),
+  lit(
+    '</td></tr>' +
+      '</table>' +
+      '<h3 style="margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#26363b">Resultado de la inspección</h3>' +
+      '<table style="width:100%;border-collapse:collapse;text-align:center">' +
+      '<tr>' +
+      '<td style="background:#e9f3ec;color:#166b2f;padding:12px 4px;border-radius:6px 0 0 6px"><div style="font-size:24px;font-weight:700;line-height:1">',
+  ),
+  num(`${s}?['ok']`),
+  lit(
+    '</div><div style="font-size:10px;letter-spacing:.04em">OK</div></td>' +
+      '<td style="background:#fbeaed;color:#8e1c27;padding:12px 4px"><div style="font-size:24px;font-weight:700;line-height:1">',
+  ),
+  num(`${s}?['noOk']`),
+  lit(
+    '</div><div style="font-size:10px;letter-spacing:.04em">NO OK</div></td>' +
+      '<td style="background:#fff1d9;color:#865710;padding:12px 4px"><div style="font-size:24px;font-weight:700;line-height:1">',
+  ),
+  num(`${s}?['enProc']`),
+  lit(
+    '</div><div style="font-size:10px;letter-spacing:.04em">EN PROC</div></td>' +
+      '<td style="background:#edf0f2;color:#58666d;padding:12px 4px;border-radius:0 6px 6px 0"><div style="font-size:24px;font-weight:700;line-height:1">',
+  ),
+  num(`${s}?['na']`),
+  lit('</div><div style="font-size:10px;letter-spacing:.04em">N/A</div></td></tr>'),
+  hallazgosRow,
+  lit(
+    '</table>' +
+      '<p style="margin:22px 0 18px;font-size:13px;color:#26363b">Los ítems, sus evidencias fotográficas y el PDF de la inspección fueron guardados en SharePoint.</p>' +
+      `<p style="margin:0 0 10px"><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=`,
+  ),
+  `string(${headerID})`,
+  lit(
+    '" style="color:#b92632;font-weight:600;text-decoration:none;font-size:13px">Abrir inspección →</a></p>' +
+      `<p style="margin:0 0 22px"><a href="${site}/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=`,
+  ),
+  `string(${headerID})`,
+  lit(
+    '&amp;FilterLookupId1=1" style="color:#b92632;font-weight:600;text-decoration:none;font-size:13px">Ver ítems y fotos →</a></p>' +
+      '<p style="margin:0;font-size:11px;color:#77847c;border-top:1px solid #edf0f0;padding-top:16px">Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>' +
+      '</div></div>',
+  ),
+];
+const emailBody = `@concat(${emailParts.join(',')})`;
 const processingActions = {
   Save_items: saveItems,
   Attach_report: sp(

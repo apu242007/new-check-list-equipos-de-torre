@@ -1636,6 +1636,56 @@
                                 "filename"
                               ],
                               "additionalProperties": false
+                            },
+                            "summary": {
+                              "type": "object",
+                              "properties": {
+                                "ok": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                },
+                                "noOk": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                },
+                                "enProc": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                },
+                                "na": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                },
+                                "sinRevisar": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                },
+                                "hallazgos": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                },
+                                "total": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 248
+                                }
+                              },
+                              "required": [
+                                "ok",
+                                "noOk",
+                                "enProc",
+                                "na",
+                                "sinRevisar",
+                                "hallazgos",
+                                "total"
+                              ],
+                              "additionalProperties": false
                             }
                           },
                           "required": [
@@ -1644,7 +1694,8 @@
                             "answers",
                             "closed",
                             "closedAt",
-                            "report"
+                            "report",
+                            "summary"
                           ],
                           "additionalProperties": false
                         }
@@ -1952,7 +2003,7 @@
                                 "parameters": {
                                   "emailMessage/To": "jcastro@tackertools.com",
                                   "emailMessage/Subject": "@concat('Preauditoría recibida - ',body('Parse_payload')?['general']?['equipment'],' - ',body('Parse_envelope')?['submissionId'])",
-                                  "emailMessage/Body": "@concat('<h2>Checklist de preauditoría recibido</h2><p>Equipo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['equipment']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Pozo: ',replace(replace(replace(string(body('Parse_payload')?['general']?['well']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'<br>Inspección: ',replace(replace(replace(string(body('Parse_payload')?['draftId']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</p><p>Los ítems, sus evidencias fotográficas y el PDF de la inspección fueron guardados en SharePoint.</p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(outputs('Create_header')?['body/ID']),'\">Abrir inspección</a></p><p><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(outputs('Create_header')?['body/ID']),'&amp;FilterLookupId1=1\">Ver ítems y fotos</a></p><p>Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p>')",
+                                  "emailMessage/Body": "@concat('<div style=\"font-family:Segoe UI,Arial,sans-serif;max-width:640px;margin:0 auto\"><div style=\"background:#182228;padding:22px 26px;border-radius:8px 8px 0 0\"><span style=\"color:#fff;font-size:20px;font-weight:700\">Preauditoría recibida</span></div><div style=\"border:1px solid #d9dfdb;border-top:none;padding:26px;border-radius:0 0 8px 8px\"><table style=\"width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13px\"><tr><td style=\"color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap\">Equipo</td><td style=\"font-weight:600\">',replace(replace(replace(string(body('Parse_payload')?['general']?['equipment']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</td></tr><tr><td style=\"color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap\">Pozo</td><td style=\"font-weight:600\">',replace(replace(replace(string(body('Parse_payload')?['general']?['well']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</td></tr><tr><td style=\"color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap\">Fecha</td><td style=\"font-weight:600\">',replace(replace(replace(string(body('Parse_payload')?['general']?['date']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</td></tr><tr><td style=\"color:#5d696d;padding:3px 10px 3px 0;white-space:nowrap\">Personal</td><td style=\"font-weight:600\">',replace(replace(replace(string(body('Parse_payload')?['general']?['inspectors']),'&','&amp;'),'<','&lt;'),'>','&gt;'),'</td></tr></table><h3 style=\"margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#26363b\">Resultado de la inspección</h3><table style=\"width:100%;border-collapse:collapse;text-align:center\"><tr><td style=\"background:#e9f3ec;color:#166b2f;padding:12px 4px;border-radius:6px 0 0 6px\"><div style=\"font-size:24px;font-weight:700;line-height:1\">',string(body('Parse_payload')?['summary']?['ok']),'</div><div style=\"font-size:10px;letter-spacing:.04em\">OK</div></td><td style=\"background:#fbeaed;color:#8e1c27;padding:12px 4px\"><div style=\"font-size:24px;font-weight:700;line-height:1\">',string(body('Parse_payload')?['summary']?['noOk']),'</div><div style=\"font-size:10px;letter-spacing:.04em\">NO OK</div></td><td style=\"background:#fff1d9;color:#865710;padding:12px 4px\"><div style=\"font-size:24px;font-weight:700;line-height:1\">',string(body('Parse_payload')?['summary']?['enProc']),'</div><div style=\"font-size:10px;letter-spacing:.04em\">EN PROC</div></td><td style=\"background:#edf0f2;color:#58666d;padding:12px 4px;border-radius:0 6px 6px 0\"><div style=\"font-size:24px;font-weight:700;line-height:1\">',string(body('Parse_payload')?['summary']?['na']),'</div><div style=\"font-size:10px;letter-spacing:.04em\">N/A</div></td></tr>',if(greater(body('Parse_payload')?['summary']?['hallazgos'],0),concat('<tr><td colspan=\"4\" style=\"padding:16px 6px 0;font-size:13px;font-weight:600;color:#8e1c27\">⚠ ',string(body('Parse_payload')?['summary']?['hallazgos']),' ítem(s) requieren seguimiento (NO OK / EN PROC).</td></tr>'),'<tr><td colspan=\"4\" style=\"padding:16px 6px 0;font-size:13px;font-weight:600;color:#166b2f\">Sin hallazgos pendientes de seguimiento.</td></tr>'),'</table><p style=\"margin:22px 0 18px;font-size:13px;color:#26363b\">Los ítems, sus evidencias fotográficas y el PDF de la inspección fueron guardados en SharePoint.</p><p style=\"margin:0 0 10px\"><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE/DispForm.aspx?ID=',string(outputs('Create_header')?['body/ID']),'\" style=\"color:#b92632;font-weight:600;text-decoration:none;font-size:13px\">Abrir inspección →</a></p><p style=\"margin:0 0 22px\"><a href=\"https://tackersrl505.sharepoint.com/sites/WellService/Lists/INSPECCION%20DE%20CAMPO%20EQ%20TORRE%20-%20ITEMS/AllItems.aspx?FilterField1=Recorrida&amp;FilterValue1=',string(outputs('Create_header')?['body/ID']),'&amp;FilterLookupId1=1\" style=\"color:#b92632;font-weight:600;text-decoration:none;font-size:13px\">Ver ítems y fotos →</a></p><p style=\"margin:0;font-size:11px;color:#77847c;border-top:1px solid #edf0f0;padding-top:16px\">Este mensaje confirma la recepción del registro; no certifica la condición técnica del equipo.</p></div></div>')",
                                   "emailMessage/Importance": "Normal"
                                 },
                                 "authentication": "@parameters('$authentication')",
